@@ -1,0 +1,3 @@
+[submodule "Dyr-El-python"]
+	path = Dyr-El-python
+	url = https://github.com/Dyr-El/AdventOfCode2022.git
