@@ -4,6 +4,9 @@
 [submodule "johan1a-scala"]
 	path = johan1a-scala
 	url = https://github.com/johan1a/advent-of-code-2022.git
+[submodule "squid-box-csharp"]
+	path = squid-box-csharp
+	url = https://github.com/squid-box/adventofcode2022.git
 [submodule "jofafrazze-csharp"]
 	path = jofafrazze-csharp
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
