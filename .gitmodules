@@ -1,3 +1,6 @@
 [submodule "Dyr-El-python"]
 	path = Dyr-El-python
 	url = https://github.com/Dyr-El/AdventOfCode2022.git
+[submodule "johan1a-scala"]
+	path = johan1a-scala
+	url = https://github.com/johan1a/advent-of-code-2022.git
