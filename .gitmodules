@@ -7,3 +7,6 @@
 [submodule "squid-box-csharp"]
 	path = squid-box-csharp
 	url = https://github.com/squid-box/adventofcode2022.git
+[submodule "jofafrazze-csharp"]
+	path = jofafrazze-csharp
+	url = https://github.com/jofafrazze/advent_of_code_2022.git
