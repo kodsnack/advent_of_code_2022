@@ -10,3 +10,6 @@
 [submodule "jofafrazze-csharp"]
 	path = jofafrazze-csharp
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
+[submodule "p1xelHer0-ocaml"]
+	path = p1xelHer0-ocaml
+	url = git@github.com:p1xelHer0/advent-of-code-2022-ocaml.git
