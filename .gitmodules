@@ -12,4 +12,7 @@
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
 [submodule "p1xelHer0-ocaml"]
 	path = p1xelHer0-ocaml
-	url = git@github.com:p1xelHer0/advent-of-code-2022-ocaml.git
+  url = git@github.com:p1xelHer0/advent-of-code-2022-ocaml.git
+[submodule "nilskj-python"]
+	path = nilskj-python
+	url = git@github.com:nilskj/AdventOfCode2022.git
