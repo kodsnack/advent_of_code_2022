@@ -22,3 +22,6 @@
 [submodule "simon-awk"]
 	path = simon-awk
 	url = https://github.com/simon-nystrom/adventofcode-2022.git
+[submodule "pin2t-go-swift"]
+	path = pin2t-go-swift
+	url = https://github.com/pin2t/aoc2022
