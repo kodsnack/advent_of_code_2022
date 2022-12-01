@@ -46,3 +46,6 @@
 [submodule "johan2b-clojure"]
 	path = johan2b-clojure
 	url = git@github.com:oelrich/advent-of-code-2022.git
+[submodule "jontem-csharp"]
+	path = jontem-csharp
+	url = https://github.com/Jontem/advent-of-code-2022.git
