@@ -16,3 +16,6 @@
 [submodule "nisse-python"]
 	path = nisse-python
 	url = https://github.com/nilskj/AdventOfCode2022.git
+[submodule "ygge-java"]
+	path = ygge-java
+	url = https://github.com/ygge/adventofcode2022
