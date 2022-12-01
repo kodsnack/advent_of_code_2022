@@ -31,6 +31,9 @@
 [submodule "idrougge-oorexx"]
 	path = idrougge-oorexx
 	url = https://github.com/idrougge/advent-of-code-2022-oorexx.git
+[submodule "idrougge-swift"]
+	path = idrougge-swift
+	url = https://github.com/idrougge/advent-of-code-2022-swift.git
 [submodule "emil-priver-aoc"]
 	path = emil-priver-aoc
 	url = https://github.com/emilpriver/advent-of-code.git
