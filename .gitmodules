@@ -22,6 +22,9 @@
 [submodule "simon-awk"]
 	path = simon-awk
 	url = https://github.com/simon-nystrom/adventofcode-2022.git
+[submodule "albert-arvidsson-elixir"]
+	path = albert-arvidsson-elixir
+	url = git@github.com:scmx/advent-of-code-2022-elixir.git
 [submodule "pin2t-go-swift"]
 	path = pin2t-go-swift
 	url = https://github.com/pin2t/aoc2022
