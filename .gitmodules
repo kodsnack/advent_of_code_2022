@@ -49,3 +49,6 @@
 [submodule "jontem-csharp"]
 	path = jontem-csharp
 	url = https://github.com/Jontem/advent-of-code-2022.git
+[submodule "LinAGKar-rust"]
+	path = LinAGKar-rust
+	url = https://github.com/LinAGKar/advent-of-code-2022-rust.git
