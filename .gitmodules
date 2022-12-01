@@ -52,6 +52,6 @@
 [submodule "LinAGKar-rust"]
 	path = LinAGKar-rust
 	url = https://github.com/LinAGKar/advent-of-code-2022-rust.git
-[submodule "Basicprogrammer10-rust"]
-	path = Basicprogrammer10-rust
+[submodule "basicprogrammer10-rust"]
+	path = basicprogrammer10-rust
 	url = https://github.com/Basicprogrammer10/Advent-Of-Code.git
