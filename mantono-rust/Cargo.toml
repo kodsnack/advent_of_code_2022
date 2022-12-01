@@ -1,0 +1,7 @@
+[package]
+name = "aoc2022"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aoc = { git = "https://github.com/mantono/aoc.git", rev = "2aa53bf" }
