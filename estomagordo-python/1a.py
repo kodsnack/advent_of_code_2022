@@ -6,18 +6,7 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    g = grouped_lines(lines)
-    m = 0
-
-    for f in g:
-        s = 0
-
-        for l in f:
-            s += int(l)
-
-        m = max(m, s)
-
-    return m
+    return max(sum(int(line) for line in group) for group in grouped_lines(lines))
 
 
 def main():

@@ -6,20 +6,8 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    g = grouped_lines(lines)
-    m = []
-
-    for f in g:
-        s = 0
-
-        for l in f:
-            s += int(l)
-
-        m.append(s)
-
-    m.sort()
-
-    return sum(m[-3:])
+    calories = [sum(int(line) for line in group) for group in grouped_lines(lines)]
+    return sum(sorted(calories)[-3:])
 
 
 def main():
