@@ -28,3 +28,6 @@
 [submodule "pin2t-go-swift"]
 	path = pin2t-go-swift
 	url = https://github.com/pin2t/aoc2022
+[submodule "idrougge-oorexx"]
+	path = idrougge-oorexx
+	url = https://github.com/idrougge/advent-of-code-2022-oorexx.git
