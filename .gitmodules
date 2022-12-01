@@ -34,3 +34,6 @@
 [submodule "emil-priver-aoc"]
 	path = emil-priver-aoc
 	url = https://github.com/emilpriver/advent-of-code.git
+[submodule "f-o-python"]
+	path = f-o-python
+	url = https://github.com/f-o/advent-of-code-2022
