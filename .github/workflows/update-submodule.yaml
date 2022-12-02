@@ -1,6 +1,7 @@
 name: Auto update submodules every 30 min 
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "*/30 * * * *"
   push:
@@ -11,10 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-        with: 
-          repository: kodsnack/advent_of_code_2022
           token: ${{ secrets.PRIVATE_TOKEN_GITHUB }}
-
       - name: Pull & update submodules recursively
         run: |
           git submodule update --init --recursive
