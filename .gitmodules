@@ -55,3 +55,6 @@
 [submodule "basicprogrammer10-rust"]
 	path = basicprogrammer10-rust
 	url = https://github.com/Basicprogrammer10/Advent-Of-Code.git
+[submodule "johan1a-rockstar"]
+	path = johan1a-rockstar
+	url = https://github.com/johan1a/advent-of-code-2022-rockstar.git
