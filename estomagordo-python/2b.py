@@ -5,10 +5,10 @@ from itertools import combinations, permutations, product
 from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded
 
 
-def solve(lines):
+def solve(games):
     score = 0
 
-    for a, b in lines:
+    for a, b in games:
         x = ord(a) - ord('A')
 
         score += 3 * (ord(b) - ord('X'))
