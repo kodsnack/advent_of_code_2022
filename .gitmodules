@@ -58,3 +58,7 @@
 [submodule "johan1a-rockstar"]
 	path = johan1a-rockstar
 	url = https://github.com/johan1a/advent-of-code-2022-rockstar.git
+[submodule "emil-eriksson-rust"]
+	path = emil-eriksson-rust
+	url = https://github.com/asheidan/advent-of-code-2022-rust.git
+	branch = main
