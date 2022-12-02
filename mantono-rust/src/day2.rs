@@ -5,11 +5,12 @@ use aoc::Solver;
 pub struct Aoc;
 
 impl Solver for Aoc {
-    type Item = Strategy;
+    type Item = Line;
 
-    fn solve_one(inputs: &[Round]) -> String {
+    fn solve_one(inputs: &[Self::Item]) -> String {
         inputs
             .iter()
+            .map(|line| Round::try_from(*line).unwrap())
             .map(|round| (round.1, round.play()))
             .map(|(shape, outome)| score(shape, outome))
             .sum::<usize>()
@@ -19,6 +20,7 @@ impl Solver for Aoc {
     fn solve_two(inputs: &[Self::Item]) -> String {
         inputs
             .iter()
+            .map(|line| Strategy::try_from(*line).unwrap())
             .map(|strat| (strat.play(), strat.1))
             .map(|(shape, outome)| score(shape, outome))
             .sum::<usize>()
@@ -28,6 +30,23 @@ impl Solver for Aoc {
 
 fn score(shape: Shape, outcome: Outcome) -> usize {
     shape.score() + outcome.score()
+}
+
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
+pub struct Line(char, char);
+
+impl FromStr for Line {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut tokens = s.split_ascii_whitespace();
+        let left = tokens.next().expect("Could not find left shape");
+        let right = tokens.next().expect("Could not find right shape");
+        let left: char = left.parse().map_err(|_| format!("Unable to parse as char '{}'", left))?;
+        let right: char =
+            right.parse().map_err(|_| format!("Unable to parse as char '{}'", right))?;
+        Ok(Line(left, right))
+    }
 }
 
 #[derive(Copy, Clone)]
@@ -49,16 +68,11 @@ impl Strategy {
     }
 }
 
-impl FromStr for Strategy {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut tokens = s.split_ascii_whitespace();
-        let shape = tokens.next().expect("Could not find shape");
-        let outcome = tokens.next().expect("Could not find outcome");
-        let shape: Shape = shape.parse()?;
-        let outcome: Outcome = outcome.parse()?;
-        Ok(Strategy(shape, outcome))
+impl From<Line> for Strategy {
+    fn from(line: Line) -> Self {
+        let shape: Shape = line.0.try_into().expect("Unable to parse shape");
+        let outcome: Outcome = line.1.try_into().expect("Unable to parse outcome");
+        Strategy(shape, outcome)
     }
 }
 
@@ -80,16 +94,11 @@ impl Round {
     }
 }
 
-impl FromStr for Round {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let mut tokens = s.split_ascii_whitespace();
-        let left = tokens.next().expect("Could not find left shape");
-        let right = tokens.next().expect("Could not find right shape");
-        let left: Shape = left.parse()?;
-        let right: Shape = right.parse()?;
-        Ok(Round(left, right))
+impl From<Line> for Round {
+    fn from(line: Line) -> Self {
+        let left: Shape = line.0.try_into().expect("Unable to parse left shape");
+        let right: Shape = line.1.try_into().expect("Unable to parse right shape");
+        Round(left, right)
     }
 }
 
@@ -110,15 +119,15 @@ impl Outcome {
     }
 }
 
-impl FromStr for Outcome {
-    type Err = String;
+impl TryFrom<char> for Outcome {
+    type Error = String;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "X" => Ok(Outcome::Lost),
-            "Y" => Ok(Outcome::Draw),
-            "Z" => Ok(Outcome::Won),
-            _ => Err(format!("Invalid outcome {}", s)),
+    fn try_from(c: char) -> Result<Self, Self::Error> {
+        match c {
+            'X' => Ok(Outcome::Lost),
+            'Y' => Ok(Outcome::Draw),
+            'Z' => Ok(Outcome::Won),
+            _ => Err(format!("Invalid outcome {}", c)),
         }
     }
 }
@@ -140,15 +149,15 @@ impl Shape {
     }
 }
 
-impl FromStr for Shape {
-    type Err = String;
+impl TryFrom<char> for Shape {
+    type Error = String;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "A" | "X" => Ok(Shape::Rock),
-            "B" | "Y" => Ok(Shape::Paper),
-            "C" | "Z" => Ok(Shape::Scissors),
-            _ => Err(format!("Unrecognized input for shape '{}'", s)),
+    fn try_from(c: char) -> Result<Self, Self::Error> {
+        match c {
+            'A' | 'X' => Ok(Shape::Rock),
+            'B' | 'Y' => Ok(Shape::Paper),
+            'C' | 'Z' => Ok(Shape::Scissors),
+            _ => Err(format!("Unrecognized input for shape '{}'", c)),
         }
     }
 }
@@ -159,14 +168,24 @@ mod tests {
 
     use crate::day2;
 
-    #[test]
-    fn test_input() {
-        let input = r#"
-            A Y
-            B X
-            C Z
-        "#;
+    use super::Line;
 
-        assert_eq!(String::from("15"), day2::Aoc::solve(input));
+    const INPUT: &str = "A Y\nB X\nC Z\n";
+
+    #[test]
+    fn test_parsing() {
+        let parsed_input: Vec<Line> = vec![Line('A', 'Y'), Line('B', 'X'), Line('C', 'Z')];
+        assert_eq!(parsed_input, day2::Aoc::parse_input(INPUT));
+    }
+
+    #[test]
+    fn test_input_part1() {
+        let parsed_input: Vec<Line> = vec![Line('A', 'Y'), Line('B', 'X'), Line('C', 'Z')];
+        assert_eq!(String::from("15"), day2::Aoc::solve_one(&parsed_input));
+    }
+    #[test]
+    fn test_input_part2() {
+        let parsed_input: Vec<Line> = vec![Line('A', 'Y'), Line('B', 'X'), Line('C', 'Z')];
+        assert_eq!(String::from("12"), day2::Aoc::solve_two(&parsed_input));
     }
 }
