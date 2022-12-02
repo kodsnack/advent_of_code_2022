@@ -2,8 +2,8 @@ from os import path
 from sys import argv
 
 dayfile = lambda day: f"""from collections import Counter, defaultdict, deque
-from functools import reduce
-from heapq import heappop, heappush
+from functools import cache, reduce
+from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
 from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded
 
@@ -29,8 +29,8 @@ if __name__ == '__main__':
 if __name__ == '__main__':
     day = argv[1]
     
-    daya = f'day{day}a.py'
-    dayb = f'day{day}b.py'
+    daya = f'{day}a.py'
+    dayb = f'{day}b.py'
     inp = f'{day}.txt'
 
     if not path.isfile(daya):
