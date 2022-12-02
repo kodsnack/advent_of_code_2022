@@ -1,0 +1,45 @@
+# AoC 2022 - day 1
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> solve(1)
+  end
+
+  def solve2(input) do
+    input
+    |> solve(3)
+  end
+
+  defp solve(input, ammount) do
+    input
+    |> String.split(~r/\W/)
+    |> Enum.chunk_by(fn e -> e != "" end)
+    |> Enum.filter(fn e -> e != [""] end)
+    |> Enum.map(fn arr -> arr |> Enum.map(&String.to_integer/1) end)
+    |> Enum.map(fn arr -> Enum.sum(arr) end)
+    |> Enum.sort(fn a, b -> a >= b end)
+    |> Enum.take(ammount)
+    |> Enum.sum()
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
