@@ -62,3 +62,6 @@
 	path = emil-eriksson-rust
 	url = https://github.com/asheidan/advent-of-code-2022-rust.git
 	branch = main
+[submodule "bazeon-csharp"]
+	path = bazeon-csharp
+	url = https://github.com/bazeon/AdventOfCode2022.git
