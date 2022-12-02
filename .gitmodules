@@ -12,7 +12,7 @@
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
 [submodule "p1xelHer0-ocaml"]
 	path = p1xelHer0-ocaml
-  url = https://github.com:p1xelHer0/advent-of-code-2022-ocaml.git
+  url = https://github.com/p1xelHer0/advent-of-code-2022-ocaml.git
 [submodule "nisse-python"]
 	path = nisse-python
 	url = https://github.com/nilskj/AdventOfCode2022.git
@@ -24,7 +24,7 @@
 	url = https://github.com/simon-nystrom/adventofcode-2022.git
 [submodule "albert-arvidsson-elixir"]
 	path = albert-arvidsson-elixir
-	url = https://github.com:scmx/advent-of-code-2022-elixir.git
+	url = https://github.com/scmx/advent-of-code-2022-elixir.git
 [submodule "pin2t-go-swift"]
 	path = pin2t-go-swift
 	url = https://github.com/pin2t/aoc2022
@@ -42,10 +42,10 @@
 	url = https://github.com/f-o/advent-of-code-2022
 [submodule "ingo-rust"]
 	path = ingo-rust
-	url = https://github.com:Ingomancer/AoC2022.git
+	url = https://github.com/Ingomancer/AoC2022.git
 [submodule "johan2b-clojure"]
 	path = johan2b-clojure
-	url = https://github.com:oelrich/advent-of-code-2022.git
+	url = https://github.com/oelrich/advent-of-code-2022.git
 [submodule "jontem-csharp"]
 	path = jontem-csharp
 	url = https://github.com/Jontem/advent-of-code-2022.git
