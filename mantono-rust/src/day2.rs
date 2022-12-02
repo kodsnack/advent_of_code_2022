@@ -40,11 +40,14 @@ impl FromStr for Line {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut tokens = s.split_ascii_whitespace();
-        let left = tokens.next().expect("Could not find left shape");
-        let right = tokens.next().expect("Could not find right shape");
-        let left: char = left.parse().map_err(|_| format!("Unable to parse as char '{}'", left))?;
+        let left: &str = tokens.next().ok_or_else(|| String::from("Could not find left token"))?;
+        let right: &str =
+            tokens.next().ok_or_else(|| String::from("Could not find right token"))?;
+
+        let left: char =
+            left.parse().map_err(|_| format!("Unable to parse as char: '{}'", left))?;
         let right: char =
-            right.parse().map_err(|_| format!("Unable to parse as char '{}'", right))?;
+            right.parse().map_err(|_| format!("Unable to parse as char: '{}'", right))?;
         Ok(Line(left, right))
     }
 }
