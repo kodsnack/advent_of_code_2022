@@ -65,3 +65,6 @@
 [submodule "bazeon-csharp"]
 	path = bazeon-csharp
 	url = https://github.com/bazeon/AdventOfCode2022.git
+[submodule "arisamiga-python"]
+	path = arisamiga-python
+	url = https://github.com/Arisamiga/Advent-Of-Code-2022.git
