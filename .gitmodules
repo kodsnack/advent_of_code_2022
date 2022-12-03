@@ -68,3 +68,6 @@
 [submodule "Arisamiga-Python"]
 	path = Arisamiga-Python
 	url = https://github.com/Arisamiga/Advent-Of-Code-2022.git
+[submodule "plux-erlang"]
+	path = plux-erlang
+	url = https://github.com/plux/advent2022.git
