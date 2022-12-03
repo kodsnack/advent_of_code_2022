@@ -1,0 +1,107 @@
+# AoC 2022 - day 02
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day02 do
+  @winning %{rock: :paper, paper: :scissors, scissors: :rock}
+
+  def solve(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(fn l ->
+      l
+      |> String.split(" ", trim: true)
+      |> parse_game
+      |> score
+    end)
+    |> Enum.sum()
+  end
+
+  def solve2(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(fn l ->
+      l
+      |> String.split(" ", trim: true)
+      |> parse_strategy
+      |> play_strategy
+    end)
+    |> Enum.sum()
+  end
+
+  defp parse_game([a, b]) do
+    opponent =
+      case a do
+        "A" -> :rock
+        "B" -> :paper
+        "C" -> :scissors
+      end
+
+    you =
+      case b do
+        "X" -> :rock
+        "Y" -> :paper
+        "Z" -> :scissors
+      end
+
+    {opponent, you}
+  end
+
+  defp parse_strategy([a, b]) do
+    opponent =
+      case a do
+        "A" -> :rock
+        "B" -> :paper
+        "C" -> :scissors
+      end
+
+    you =
+      case b do
+        "X" -> :loose
+        "Y" -> :draw
+        "Z" -> :win
+      end
+
+    {opponent, you}
+  end
+
+  defp score({same, same}), do: 3 + score_for_thing(same)
+  defp score({:rock, :paper}), do: 6 + score_for_thing(:paper)
+  defp score({:paper, :scissors}), do: 6 + score_for_thing(:scissors)
+  defp score({:scissors, :rock}), do: 6 + score_for_thing(:rock)
+  defp score({_, you}), do: score_for_thing(you)
+
+  defp play_strategy({opponent, :win}), do: 6 + score_for_thing(@winning[opponent])
+
+  defp play_strategy({opponent, :loose}) do
+    @winning
+    |> Map.to_list()
+    |> Enum.find(fn {a, b} -> b == opponent end)
+    |> elem(0)
+    |> score_for_thing
+  end
+
+  defp play_strategy({opponent, :draw}), do: 3 + score_for_thing(opponent)
+
+  defp score_for_thing(:rock), do: 1
+  defp score_for_thing(:paper), do: 2
+  defp score_for_thing(:scissors), do: 3
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day02.solve()
+```
+
+```elixir
+Kino.Input.read(input) |> Day02.solve2()
+```

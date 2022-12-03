@@ -12,7 +12,7 @@
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
 [submodule "p1xelHer0-ocaml"]
 	path = p1xelHer0-ocaml
-  url = git@github.com:p1xelHer0/advent-of-code-2022-ocaml.git
+  url = https://github.com/p1xelHer0/advent-of-code-2022-ocaml.git
 [submodule "nisse-python"]
 	path = nisse-python
 	url = https://github.com/nilskj/AdventOfCode2022.git
@@ -24,7 +24,44 @@
 	url = https://github.com/simon-nystrom/adventofcode-2022.git
 [submodule "albert-arvidsson-elixir"]
 	path = albert-arvidsson-elixir
-	url = git@github.com:scmx/advent-of-code-2022-elixir.git
+	url = https://github.com/scmx/advent-of-code-2022-elixir.git
 [submodule "pin2t-go-swift"]
 	path = pin2t-go-swift
 	url = https://github.com/pin2t/aoc2022
+[submodule "idrougge-oorexx"]
+	path = idrougge-oorexx
+	url = https://github.com/idrougge/advent-of-code-2022-oorexx.git
+[submodule "idrougge-swift"]
+	path = idrougge-swift
+	url = https://github.com/idrougge/advent-of-code-2022-swift.git
+[submodule "emil-priver-aoc"]
+	path = emil-priver-aoc
+	url = https://github.com/emilpriver/advent-of-code.git
+[submodule "f-o-python"]
+	path = f-o-python
+	url = https://github.com/f-o/advent-of-code-2022
+[submodule "ingo-rust"]
+	path = ingo-rust
+	url = https://github.com/Ingomancer/AoC2022.git
+[submodule "johan2b-clojure"]
+	path = johan2b-clojure
+	url = https://github.com/oelrich/advent-of-code-2022.git
+[submodule "jontem-csharp"]
+	path = jontem-csharp
+	url = https://github.com/Jontem/advent-of-code-2022.git
+[submodule "LinAGKar-rust"]
+	path = LinAGKar-rust
+	url = https://github.com/LinAGKar/advent-of-code-2022-rust.git
+[submodule "basicprogrammer10-rust"]
+	path = basicprogrammer10-rust
+	url = https://github.com/Basicprogrammer10/Advent-Of-Code.git
+[submodule "johan1a-rockstar"]
+	path = johan1a-rockstar
+	url = https://github.com/johan1a/advent-of-code-2022-rockstar.git
+[submodule "emil-eriksson-rust"]
+	path = emil-eriksson-rust
+	url = https://github.com/asheidan/advent-of-code-2022-rust.git
+	branch = main
+[submodule "bazeon-csharp"]
+	path = bazeon-csharp
+	url = https://github.com/bazeon/AdventOfCode2022.git
