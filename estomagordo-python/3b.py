@@ -6,20 +6,17 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    s = 0
-    m = len(lines)
+    def letval(c):
+        base, comp = (27, 'A') if c.isupper() else (1, 'a')
+        return base + ord(c)-ord(comp)
 
-    for x in range(0, m, 3):
-        o, p, q = lines[x:x+3]
-
-        c = [x for x in o if x in p and x in q][0]
-
-        if c.isupper():
-            s += 27 + ord(c)-ord('A')
-        else:
-            s += 1 + ord(c)-ord('a')
-
-    return s
+    def common(group):
+        return [c for c in group[0] if c in group[1] and c in group[2]][0]
+        
+    def groupval(group):
+        return letval(common(group))
+    
+    return sum(groupval(lines[x:x+3]) for x in range(0, len(lines), 3))
 
 
 def main():
