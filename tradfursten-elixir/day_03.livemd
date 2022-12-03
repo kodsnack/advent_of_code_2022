@@ -1,0 +1,66 @@
+# AoC 2022 - day 03
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(fn l ->
+      l |> String.codepoints() |> Enum.split(div(String.length(l), 2))
+    end)
+    |> Enum.map(fn {a, b} ->
+      a
+      |> Enum.find(fn c -> Enum.any?(b, &(&1 == c)) end)
+    end)
+    |> Enum.map(&score/1)
+    |> Enum.sum()
+  end
+
+  def solve2(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&String.codepoints/1)
+    |> Enum.chunk_every(3)
+    |> Enum.map(fn [a, b, c] ->
+      Enum.find(a, fn current ->
+        with true <- Enum.any?(b, &(&1 == current)),
+             true <- Enum.any?(c, &(&1 == current)) do
+          true
+        else
+          _ -> false
+        end
+      end)
+    end)
+    |> Enum.map(&score/1)
+    |> Enum.sum()
+  end
+
+  defp score(c) do
+    cond do
+      c >= "a" ->
+        :binary.first(c) - 96
+
+      true ->
+        :binary.first(c) - 64 + 26
+    end
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
