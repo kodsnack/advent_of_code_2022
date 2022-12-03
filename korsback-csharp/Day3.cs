@@ -34,4 +34,29 @@ public class Day3
         }
         Console.WriteLine(sumOfPoints);
     }
+
+    public static void B() 
+    {
+        var data = Utils.GetData(3, "\r\n");
+        var sumOfPoints = 0;
+
+        for(int i = 0; i < data.Count(); i+=3) {
+            
+            var rucksacks = data.Skip(i).Take(3).ToList();
+
+            var rucksack1 = rucksacks[0];
+            var rucksack2 = rucksacks[1];
+            var rucksack3 = rucksacks[2];
+
+            foreach(var letter in rucksack1) 
+            {
+                if(rucksack2.Contains(letter) && rucksack3.Contains(letter)) 
+                {
+                    sumOfPoints += GetPriority(letter);
+                    break;
+                }
+            }
+        }
+        Console.WriteLine(sumOfPoints);
+    }
 }
