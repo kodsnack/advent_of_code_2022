@@ -1,4 +1,4 @@
-from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap
+from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives
 
 
 def test_distance():
@@ -247,3 +247,12 @@ def test_chunks_with_overlap():
 
     assert([[1, 2], [2, 7], [7, 10], [10, 12], [12, 2]] == twochunks)
     assert([[1, 2, 7], [2, 7, 10], [7, 10, 12], [10, 12, 2]] == threechunks)
+
+
+def test_helpers():
+    s = 'What they-43 were 8 saying was <albeit 7> (9) mi85ninte and -2'
+
+    nums = positives(s)
+    expected = [43, 8, 7, 9, 85, 2]
+
+    assert(expected == nums)
