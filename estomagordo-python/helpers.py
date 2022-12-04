@@ -132,3 +132,9 @@ def chunks(l, n):
 def chunks_with_overlap(l, n):
     for x in range(n, len(l)+1):
         yield(l[x-n:x])
+
+
+def positives(line):
+    pattern = re.compile(r'\d+')
+
+    return [int(val) for val in re.findall(pattern, line) if val]

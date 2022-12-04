@@ -2,22 +2,18 @@ from collections import Counter, defaultdict, deque
 from functools import cache, reduce
 from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
-from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded
+from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives
 
 
 def solve(lines):
-    count = 0
+    def rangify(line):
+        a, b, c, d = positives(line)
+        return {num for num in range(a, b+1)}, {num for num in range(c, d+1)}
 
-    for l in lines:
-        a, b = l.split(',')
+    def overlaps(a, b):
+        return len(a|b) in (len(a), len(b))
 
-        c,d = map(int, a.split('-'))
-        e,f = map(int, b.split('-'))
-
-        if (c >= e and d <= f) or (e >= c and f <= d):
-            count += 1
-
-    return count
+    return sum(overlaps(*rangify(line)) for line in lines)
 
 
 def main():
