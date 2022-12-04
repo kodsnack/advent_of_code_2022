@@ -70,7 +70,7 @@ impl FromStr for Entry {
             0 => Ok(Entry::Divider),
             _ => match s.parse::<usize>() {
                 Ok(num) => Ok(Entry::Calories(num)),
-                Err(_) => Err(String::from(format!("Invalid input {}", s))),
+                Err(_) => Err(format!("Invalid input {}", s)),
             },
         }
     }
