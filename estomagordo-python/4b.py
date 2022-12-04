@@ -6,23 +6,27 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    def letval(c):
-        base, comp = (27, 'A') if c.isupper() else (1, 'a')
-        return base + ord(c)-ord(comp)
+    count = 0
 
-    def common(line):
-        return [c for c in line[:len(line)//2] if c in line[len(line)//2:]][0]
+    for l in lines:
+        a, b = l.split(',')
 
-    def lineval(line):
-        return letval(common(line))
-    
-    return sum(lineval(line) for line in lines)
+        c,d = map(int, a.split('-'))
+        e,f = map(int, b.split('-'))
+
+        x = {o for o in range(c, d+1)}
+        y = {o for o in range(e, f+1)}
+
+        if x&y:
+            count += 1
+
+    return count
 
 
 def main():
     lines = []
 
-    with open('3.txt') as f:
+    with open('4.txt') as f:
         for line in f.readlines():
             lines.append(line)
             
