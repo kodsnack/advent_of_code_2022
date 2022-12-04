@@ -12,7 +12,7 @@ def solve(lines):
 
     def common(line):
         return [c for c in line[:len(line)//2] if c in line[len(line)//2:]][0]
-        
+
     def lineval(line):
         return letval(common(line))
     

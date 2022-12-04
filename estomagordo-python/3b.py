@@ -16,7 +16,7 @@ def solve(lines):
     def groupval(group):
         return letval(common(group))
     
-    return sum(groupval(lines[x:x+3]) for x in range(0, len(lines), 3))
+    return sum(groupval(chunk) for chunk in chunks(lines, 3))
 
 
 def main():
