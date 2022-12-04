@@ -13,8 +13,8 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN_GITHUB }}
       - name: Pull & update submodules recursively
         run: |
-          git submodule update --init --recursive
-          git submodule update --recursive --remote
+          git submodule update --init
+          git submodule update --remote
       - name: Commit
         run: |
           git config user.email "actions@github.com"
