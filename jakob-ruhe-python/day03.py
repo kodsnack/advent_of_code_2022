@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # Rucksack Reorganization
-# By Jakob Ruhe 2021-12-03
+# By Jakob Ruhe 2022-12-03
 
 import os
 import utils

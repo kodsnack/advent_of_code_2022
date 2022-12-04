@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-# By Jakob Ruhe 2021-12-02
+# By Jakob Ruhe 2022-12-02
 
 import os
 import unittest
