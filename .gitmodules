@@ -74,3 +74,6 @@
 [submodule "valentk777-python"]
 	path = valentk777
 	url = https://github.com/valentk777/Competitive-Programming.git
+[submodule "meck-rust"]
+	path = meck-rust
+	url = https://github.com/meck/AoC2022-rs.git
