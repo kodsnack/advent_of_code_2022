@@ -71,3 +71,6 @@
 [submodule "plux-erlang"]
 	path = plux-erlang
 	url = https://github.com/plux/advent2022.git
+[submodule "valentk777-python"]
+	path = valentk777
+	url = https://github.com/valentk777/Competitive-Programming.git
