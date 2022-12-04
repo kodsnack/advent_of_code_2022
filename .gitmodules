@@ -77,3 +77,6 @@
 [submodule "meck-rust"]
 	path = meck-rust
 	url = https://github.com/meck/AoC2022-rs.git
+[submodule "albertdahlin-c"]
+	path = albertdahlin-c
+	url = https://github.com/albertdahlin/aoc-2022-c.git
