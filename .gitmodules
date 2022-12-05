@@ -84,5 +84,5 @@
         path = yxhuvud-crystal
         url = https://github.com/yxhuvud/aoc22.git
 [submodule "sjoelander-mainframe"]
-        path = sjoelander-mainframe 
-        url = https://github.com/Sjoelander/aoc2022.git 
+	path = sjoelander-mainframe
+	url = https://github.com/Sjoelander/aoc2022.git
