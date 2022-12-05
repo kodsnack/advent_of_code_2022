@@ -6,46 +6,38 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    crates = []
-    moves = []
-    addingto = crates
+    crates, moves = grouped_lines(lines)
 
-    for line in lines:
-        if not line.rstrip():
-            addingto = moves
-        else:
-            addingto.append(line)
+    def stackify(crates):
+        stacks = []
 
-    stacks = []
+        for line in crates:
+            n = len(line)
 
-    for line in crates:
-        n = len(line)
+            for x in range(1, n, 4):
+                if not line[x].isalpha():
+                    continue
 
-        for x in range(1, n, 4):
-            if not line[x].isalpha():
-                continue
+                cratenum = x//4
 
-            cratenum = x//4
+                while len(stacks) < cratenum+1:
+                    stacks.append([])
 
-            while len(stacks) < cratenum+1:
-                stacks.append([])
+                stacks[cratenum] = [line[x]] + stacks[cratenum]
 
-            stacks[cratenum] = [line[x]] + stacks[cratenum]
+        return stacks
 
-    m = len(stacks)
+    def apply(stacks, moves):
+        for move in moves:
+            number, frm, to = ints(move)
 
-    for move in moves:
-        number, frm, to = ints(move)
-        
-        stacks[to-1].extend(stacks[frm-1][-number:])
-        stacks[frm-1] = stacks[frm-1][:-number]
+            stacks[to-1].extend(stacks[frm-1][-number:])
+            stacks[frm-1] = stacks[frm-1][:-number]
+            
+    stacks = stackify(crates)
+    apply(stacks, moves)   
 
-    s = ''
-
-    for stack in stacks:
-        s += stack[-1]
-
-    return s
+    return ''.join(stack[-1] for stack in stacks)
 
 
 def main():
