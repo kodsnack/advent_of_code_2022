@@ -88,4 +88,4 @@
 	url = https://github.com/Sjoelander/aoc2022.git
 [submodule "blaklinten-bash"]
 	path = blaklinten-bash
-	url = https://github.com/blaklinten/aoc2022.git
+	url = https://github.com/blaklinten/aoc2022
