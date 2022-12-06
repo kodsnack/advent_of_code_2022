@@ -1,0 +1,135 @@
+# AoC 2022 - day 05
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    {stacks, instructions} =
+      input
+      |> String.split("\n")
+      |> Enum.split_while(&(&1 != ""))
+
+    crate_indices = get_crate_indices(1, List.last(stacks) |> String.split(""), [])
+
+    stacks =
+      for i <- 0..(length(crate_indices) - 1) do
+        {i + 1, populate_stack(length(stacks) - 2, Enum.at(crate_indices, i), stacks, [])}
+      end
+      |> Map.new()
+
+    instructions =
+      instructions
+      |> Enum.filter(&(&1 != ""))
+      |> Enum.map(fn l ->
+        ["move", ammount, "from", from, "to", to] =
+          l
+          |> String.split(" ", trim: true)
+
+        {String.to_integer(ammount), String.to_integer(from), String.to_integer(to)}
+      end)
+
+    stacks = preform_move(instructions, stacks)
+
+    stacks
+    |> Map.to_list()
+    |> Enum.map(fn {_, stack} -> hd(stack) end)
+    |> Enum.join("")
+  end
+
+  def solve2(input) do
+    {stacks, instructions} =
+      input
+      |> String.split("\n")
+      |> Enum.split_while(&(&1 != ""))
+
+    crate_indices = get_crate_indices(1, List.last(stacks) |> String.split(""), [])
+
+    stacks =
+      for i <- 0..(length(crate_indices) - 1) do
+        {i + 1, populate_stack(length(stacks) - 2, Enum.at(crate_indices, i), stacks, [])}
+      end
+      |> Map.new()
+
+    instructions =
+      instructions
+      |> Enum.filter(&(&1 != ""))
+      |> Enum.map(fn l ->
+        ["move", ammount, "from", from, "to", to] =
+          l
+          |> String.split(" ", trim: true)
+
+        {String.to_integer(ammount), String.to_integer(from), String.to_integer(to)}
+      end)
+
+    stacks = preform_atomic_move(instructions, stacks)
+
+    stacks
+    |> Map.to_list()
+    |> Enum.map(fn {_, stack} -> hd(stack) end)
+    |> Enum.join("")
+  end
+
+  defp preform_move([], stacks), do: stacks
+  defp preform_move([{0, _, _} | tail], stacks), do: preform_move(tail, stacks)
+
+  defp preform_move([{ammount, from, to} | instructions], stacks) do
+    [head | tail] = Map.get(stacks, from)
+
+    stacks =
+      Map.update(stacks, to, [], &[head | &1])
+      |> Map.put(from, tail)
+
+    preform_move([{ammount - 1, from, to} | instructions], stacks)
+  end
+
+  defp preform_atomic_move([], stacks), do: stacks
+
+  defp preform_atomic_move([{ammount, from, to} | instructions], stacks) do
+    from_stack = Map.get(stacks, from)
+    {move, from_stack} = Enum.split(from_stack, ammount)
+
+    stacks =
+      Map.update(stacks, to, [], &(move ++ &1))
+      |> Map.put(from, from_stack)
+
+    preform_atomic_move(instructions, stacks)
+  end
+
+  defp get_crate_indices(index, crates, acc) do
+    case Enum.find_index(crates, &(&1 == Integer.to_string(index))) do
+      nil -> Enum.reverse(acc)
+      a -> get_crate_indices(index + 1, crates, [a | acc])
+    end
+  end
+
+  defp populate_stack(-1, _, _, stack), do: stack
+
+  defp populate_stack(row, index, input, stack) do
+    letter =
+      Enum.at(input, row)
+      |> String.at(index - 1)
+
+    case letter do
+      " " -> stack
+      a -> populate_stack(row - 1, index, input, [a | stack])
+    end
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
