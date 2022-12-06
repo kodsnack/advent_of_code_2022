@@ -8,13 +8,13 @@
 std::tuple<std::string, std::string> p06(const std::string &input) {
     int64_t ans1 = 0;
     int64_t ans2 = 0;
-    std::string data;
+    std::vector<int> data;
     data.reserve(input.size());
 
     {
         for (const auto c: input) {
             if (c >= 'a' && c <= 'z') {
-                data.push_back(c);
+                data.push_back(1 << (c-'a'));
             }
         }
 
@@ -26,12 +26,11 @@ std::tuple<std::string, std::string> p06(const std::string &input) {
             bool nope = false;
             int set = 0;
             for (size_t k = 0; k < N; k++) {
-                auto mask = (1 << (data[i+k]-'a'));
-                if(set & mask) {
+                if(set & data[i+k]) {
                     nope = true;
                     break;
                 }
-                set |= mask;
+                set |= data[i+k];
             }
             if (!nope) {
                 (p == 1 ? ans1 : ans2) = static_cast<int>(i + N);
