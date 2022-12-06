@@ -8,6 +8,8 @@ day4a = __import__('4a')
 day4b = __import__('4b')
 day5a = __import__('5a')
 day5b = __import__('5b')
+day6a = __import__('6a')
+day6b = __import__('6b')
 
 
 def test_1a():
@@ -58,3 +60,13 @@ def test_5a():
 def test_5b():
     result = day5b.main()
     assert('BNTZFPMMW' == result)
+
+
+def test_6a():
+    result = day6a.main()
+    assert(1566 == result)
+
+
+def test_6b():
+    result = day6b.main()
+    assert(2265 == result)
