@@ -6,8 +6,6 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    space = 70000000
-    needmax = 30000000
     root = [{}, {}, None, '/']
     directory = root
 
@@ -45,14 +43,17 @@ def solve(lines):
         return totsize
     
     sizeup(root)
+
+    space = 70000000
+    needmax = 30000000
     need = space - needmax
     using = sizes['/']  
     
     best = 10**10
 
-    for k, v in sizes.items():
-        if using - v <= need:
-            best = min(best, v)
+    for size in sizes.values():
+        if using - size <= need:
+            best = min(best, size)
 
     return best
 
@@ -69,6 +70,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-# 28264506
-# 12764747
