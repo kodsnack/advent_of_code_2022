@@ -7,9 +7,8 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 def solve(lines):
     limit = 100000
-    root = [{}, {}, None]
-    filesystem = {'/': root}
-    directory = filesystem['/']
+    root = [{}, {}, None, '/']
+    directory = root
 
     for line in lines:
         command = line.rstrip().split()
@@ -31,17 +30,21 @@ def solve(lines):
 
         if command[0] == 'dir':
             if command[1] not in directory[0]:
-                newdir = [{}, {}, directory]
-                filesystem[command[1]] = newdir
+                newdir = [{}, {}, directory, directory[3] + command[1] + '/']
                 directory[0][command[1]] = newdir
 
-    def size(directory):
-        subdirs, files, _ = filesystem[directory]
+    sizes = {}
 
-        return sum(v for v in files.values()) + sum(size(subdir) for subdir in subdirs)
+    def sizeup(directory):
+        subdirs, files, _, name = directory
+
+        totsize = sum(v for v in files.values()) + sum(sizeup(subdir) for subdir in subdirs.values())
+        sizes[name] = totsize
+
+        return totsize
     
-    sizes = {directory: size(directory) for directory in filesystem.keys()}
-
+    sizeup(root)    
+    
     return sum(s for s in sizes.values() if s <= limit)
 
 

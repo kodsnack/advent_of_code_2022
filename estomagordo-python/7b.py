@@ -6,7 +6,55 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(lines):
-    pass
+    space = 70000000
+    needmax = 30000000
+    root = [{}, {}, None, '/']
+    directory = root
+
+    for line in lines:
+        command = line.rstrip().split()
+
+        if command[0] == '$':
+
+            if command[1] == 'cd':
+                if command[2] == '..':
+                    directory = directory[2]
+                elif command[2] == '/':
+                    directory = root
+                else:
+                    directory = directory[0][command[2]]
+            if command[1] == 'ls':
+                pass
+
+        if command[0].isdigit():
+            directory[1][command[1]] = int(command[0])
+
+        if command[0] == 'dir':
+            if command[1] not in directory[0]:
+                newdir = [{}, {}, directory, directory[3] + command[1] + '/']
+                directory[0][command[1]] = newdir
+
+    sizes = {}
+
+    def sizeup(directory):
+        subdirs, files, _, name = directory
+
+        totsize = sum(v for v in files.values()) + sum(sizeup(subdir) for subdir in subdirs.values())
+        sizes[name] = totsize
+
+        return totsize
+    
+    sizeup(root)
+    need = space - needmax
+    using = sizes['/']  
+    
+    best = 10**10
+
+    for k, v in sizes.items():
+        if using - v <= need:
+            best = min(best, v)
+
+    return best
 
 
 def main():
@@ -21,3 +69,6 @@ def main():
 
 if __name__ == '__main__':
     print(main())
+
+# 28264506
+# 12764747
