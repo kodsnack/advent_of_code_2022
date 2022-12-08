@@ -9,25 +9,22 @@ def solve(grid):
     height = len(grid)
     width = len(grid[0])
 
-    best = 0
+    def score(y, x):
+        h = grid[y][x]
+        raysfrom = rays_from_inside(grid, y, x)
+        lengths = []
+
+        for ray in raysfrom:
+            length = 0
+            for tree in ray:
+                length += 1
+                if tree >= h:
+                    break
+            lengths.append(length)
+
+        return multall(lengths)
     
-    for y in range(height):
-        for x in range(width):
-            h = grid[y][x]
-            raysfrom = rays_from_inside(grid, y, x)
-            lengths = []
-
-            for ray in raysfrom:
-                length = 0
-                for tree in ray:
-                    length += 1
-                    if tree >= h:
-                        break
-                lengths.append(length)
-
-            best = max(best, multall(lengths))
-
-    return best
+    return max(score(y, x) for y in range(height) for x in range(width))
 
 
 def main():
