@@ -2,45 +2,30 @@ from collections import Counter, defaultdict, deque
 from functools import cache, reduce
 from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
-from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives
+from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
 
 
-def solve(lines):
-    height = len(lines)
-    width = len(lines[0])
+def solve(grid):
+    height = len(grid)
+    width = len(grid[0])
 
     best = 0
     
     for y in range(height):
         for x in range(width):
-            n = y
-            s = height-y-1
-            w = x
-            e = width-x-1
+            h = grid[y][x]
+            raysfrom = rays_from_inside(grid, y, x)
+            lengths = []
 
-            h = lines[y][x]
+            for ray in raysfrom:
+                length = 0
+                for tree in ray:
+                    length += 1
+                    if tree >= h:
+                        break
+                lengths.append(length)
 
-            for dy in range(1, y+1):
-                if lines[y-dy][x] >= h:
-                    n = dy
-                    break
-
-            for dy in range(1, height-y):
-                if lines[y+dy][x] >= h:
-                    s = dy
-                    break
-
-            for dx in range(1, x+1):
-                if lines[y][x-dx] >= h:
-                    w = dx
-                    break
-
-            for dx in range(1, width-x):
-                if lines[y][x+dx] >= h:
-                    e = dx
-                    break
-
-            best = max(best, n*s*w*e)
+            best = max(best, multall(lengths))
 
     return best
 
@@ -57,5 +42,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-# 1495728

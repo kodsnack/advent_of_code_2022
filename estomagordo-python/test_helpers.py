@@ -1,4 +1,4 @@
-from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives
+from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives, rays, rays_from_inside
 
 
 def test_distance():
@@ -249,10 +249,60 @@ def test_chunks_with_overlap():
     assert([[1, 2, 7], [2, 7, 10], [7, 10, 12], [10, 12, 2]] == threechunks)
 
 
-def test_helpers():
+def test_nums():
     s = 'What they-43 were 8 saying was <albeit 7> (9) mi85ninte and -2'
 
     nums = positives(s)
     expected = [43, 8, 7, 9, 85, 2]
 
     assert(expected == nums)
+
+
+def test_rays():
+    grid = [
+        [3, 0, 3, 7, 3],
+        [2, 5, 5, 1, 2],
+        [6, 5, 3, 3, 2],
+        [3, 3, 5, 4, 9],
+        [3, 5, 3, 9, 0]
+    ]
+
+    y = 1
+    x = 2
+
+    n = [3]
+    s = [3, 5, 3]
+    w = [2, 5]
+    e = [1, 2]
+
+    raysfrom = rays(grid, y, x)
+
+    assert(n in raysfrom)
+    assert(s in raysfrom)
+    assert(w in raysfrom)
+    assert(e in raysfrom)
+
+
+def test_rays_from_inside():
+    grid = [
+        [3, 0, 3, 7, 3],
+        [2, 5, 5, 1, 2],
+        [6, 5, 3, 3, 2],
+        [3, 3, 5, 4, 9],
+        [3, 5, 3, 9, 0]
+    ]
+
+    y = 1
+    x = 2
+
+    n = [3]
+    s = [3, 5, 3]
+    w = [5, 2]
+    e = [1, 2]
+
+    raysfrom = rays_from_inside(grid, y, x)
+
+    assert(n in raysfrom)
+    assert(s in raysfrom)
+    assert(w in raysfrom)
+    assert(e in raysfrom)
