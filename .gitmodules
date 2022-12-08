@@ -89,6 +89,3 @@
 [submodule "blaklinten-bash"]
 	path = blaklinten-bash
 	url = https://github.com/blaklinten/aoc2022
-[submodule "nerarith-haskell"]
-	path = nerarith-haskell
-	url = https://github.com/Nerarith/advent_of_code_2022.git
