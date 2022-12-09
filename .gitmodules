@@ -93,5 +93,5 @@
 	path = nerarith-haskell
 	url = https://github.com/Nerarith/advent_of_code_2022.git
 [submodule "pollo-solutions"]
-	path = advent-of-code-2022
+	path = pollo-solutions
 	url = https://github.com/victormhp/advent-of-code-2022.git
