@@ -3,9 +3,12 @@
 # Random utility functions by Jakob Ruhe
 
 import unittest
+from collections import namedtuple
 import re
 
-DIRS = ("N", "W", "S", "E")
+DIRS = ("U", "L", "D", "R")
+
+Point = namedtuple("Point", ["x", "y"])
 
 
 def dir_from_name(name):
