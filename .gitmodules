@@ -92,6 +92,6 @@
 [submodule "nerarith-haskell"]
 	path = nerarith-haskell
 	url = https://github.com/Nerarith/advent_of_code_2022.git
-[submodule "pollo-solutions"]
-	path = pollo-solutions
+[submodule "victormhp-python"]
+	path = victormhp-python
 	url = https://github.com/victormhp/advent-of-code-2022.git
