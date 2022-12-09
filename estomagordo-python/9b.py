@@ -9,7 +9,8 @@ def solve(lines):
     visited = {(0,0)}
     hy = 0
     hx = 0
-    tail = [[0, 0] for _ in range(9)]
+    tailsize = 9
+    tail = [[0, 0] for _ in range(tailsize)]
 
     for line in lines:
         move = line.split()
@@ -28,21 +29,10 @@ def solve(lines):
             prevy = hy
             prevx = hx
 
-            for i in range(9):
+            for i in range(tailsize):
                 ty, tx = tail[i]
 
                 if abs(prevy-ty) == 2 or abs(prevx-tx) == 2:
-                    # if prevy == ty:
-                    #     if move[0] == 'L':
-                    #         tx = prevx + 1
-                    #     else:
-                    #         tx = prevx - 1
-                    # elif prevx == tx:
-                    #     if move[0] == 'U':
-                    #         ty = prevy + 1
-                    #     else:
-                    #         ty = prevy - 1
-                    # else:
                     dy = 1 if prevy > ty else 0 if prevy == ty else -1
                     dx = 1 if prevx > tx else 0 if prevx == tx else -1
 
@@ -54,22 +44,6 @@ def solve(lines):
                 prevx = tx
 
             visited.add((tail[-1][0], tail[-1][1]))
-
-    # miny = min(v[0] for v in visited)
-    # maxy = max(v[0] for v in visited)
-    # minx = min(v[1] for v in visited)
-    # maxx = max(v[1] for v in visited)
-
-    # for y in range(miny, maxy+1):
-    #     row = ''
-
-    #     for x in range(minx, maxx+1):
-    #         if (y, x) in visited:
-    #             row += '#'
-    #         else:
-    #             row += '.'
-
-    #     print(row)
 
     
     return len(visited)
