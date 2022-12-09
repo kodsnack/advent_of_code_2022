@@ -10,6 +10,12 @@ day5a = __import__('5a')
 day5b = __import__('5b')
 day6a = __import__('6a')
 day6b = __import__('6b')
+day7a = __import__('7a')
+day7b = __import__('7b')
+day8a = __import__('8a')
+day8b = __import__('8b')
+day9a = __import__('9a')
+day9b = __import__('9b')
 
 
 def test_1a():
@@ -70,3 +76,33 @@ def test_6a():
 def test_6b():
     result = day6b.main()
     assert(2265 == result)
+
+
+def test_7a():
+    result = day7a.main()
+    assert(1648397 == result)
+
+
+def test_7b():
+    result = day7b.main()
+    assert(1815525 == result)
+
+
+def test_8a():
+    result = day8a.main()
+    assert(1816 == result)
+
+
+def test_8b():
+    result = day8b.main()
+    assert(383520 == result)
+
+
+def test_9a():
+    result = day9a.main()
+    assert(5513 == result)
+
+
+def test_9b():
+    result = day9b.main()
+    assert(2427 == result)

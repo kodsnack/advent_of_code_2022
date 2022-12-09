@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import '../util/util.dart';
 
 //const String inputFile = 'day6/example.txt';
@@ -6,20 +8,33 @@ const String inputFile = 'day6/input.txt';
 Future<void> main(List<String> args) async {
   final lines = await readInput(inputFile);
   print('Part 1:');
-  print(resultOfPart1(lines));
+  for (var line in lines) {
+    print(calcResult(line, distinctCount: 4));
+  }
   print('Part 2:');
-  print(resultOfPart2(lines));
+  for (var line in lines) {
+    print(calcResult(line, distinctCount: 14));
+  }
 }
 
-String resultOfPart1(List<String> lines) {
-  final stacks = getStacks(lines);
-  final moves = getMoves(lines);
-  doMoves(stacks, moves);
-  String result = '';
-  for (var stack in stacks) {
-    result += stack.last;
+int calcResult(String line, {int distinctCount = 4}) {
+  final charList = line.split('');
+  int counter = 0;
+  final Queue<String> lastCharsQueue = Queue<String>();
+  while (!queueHasCountDistinctChars(lastCharsQueue, distinctCount)) {
+    if (lastCharsQueue.length == distinctCount) {
+      lastCharsQueue.removeFirst();
+    }
+    lastCharsQueue.add(charList[counter]);
+    counter++;
   }
-  return result;
+  return counter;
+}
+
+bool queueHasCountDistinctChars(
+    Queue<String> lastCharsQueue, int distinctCount) {
+  final charSet = lastCharsQueue.toSet();
+  return charSet.length == distinctCount;
 }
 
 String resultOfPart2(List<String> lines) {
