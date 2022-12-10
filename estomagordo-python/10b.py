@@ -8,14 +8,14 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 def solve(lines):
     image = [['.' for _ in range(40)] for _ in range(6)]
     x = 1
-    cycle = 1
+    cycle = 0
 
     for line in lines:
-        drawpos = (cycle-1) % 40 + 1
-        row = (cycle-1)//40
+        drawpos = cycle % 40
+        row = cycle//40
 
-        if drawpos in (x-1, x, x):
-            image[row][drawpos-1] = '#'
+        if drawpos in (x-1, x, x+1):
+            image[row][drawpos] = '#'
 
         if line.rstrip() == 'noop':
             cycle += 1
@@ -23,11 +23,11 @@ def solve(lines):
             val = int(line.split()[1])
 
             cycle += 1
-            drawpos = (cycle-1) % 40 + 1
-            row = (cycle-1)//40
+            drawpos = cycle % 40
+            row = cycle//40
 
-            if drawpos in (x-1, x, x):
-                image[row][drawpos-1] = '#'
+            if drawpos in (x-1, x, x+1):
+                image[row][drawpos] = '#'
 
             cycle += 1
             x += val
