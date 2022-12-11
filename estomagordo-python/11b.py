@@ -44,7 +44,7 @@ def solve(groups):
                 else:
                     item *= opval
 
-                item%= modval
+                item %= modval
 
                 if item % div == 0:
                     monkeys[iftrue][1].append(item)
@@ -56,8 +56,7 @@ def solve(groups):
     handles = [monkey[0] for monkey in monkeys]
     handles.sort()
 
-    return handles[-2] * handles[-1]
-                
+    return handles[-2] * handles[-1]                
 
 
 def main():
@@ -72,5 +71,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-# 32398560000

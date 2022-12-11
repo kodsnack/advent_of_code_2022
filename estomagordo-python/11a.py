@@ -52,8 +52,7 @@ def solve(groups):
     handles = [monkey[0] for monkey in monkeys]
     handles.sort()
 
-    return handles[-2] * handles[-1]
-                
+    return handles[-2] * handles[-1]                
 
 
 def main():

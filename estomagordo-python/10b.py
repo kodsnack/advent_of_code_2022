@@ -31,9 +31,8 @@ def solve(lines):
 
             cycle += 1
             x += val
-
-    for line in image:
-        print(''.join(line))
+            
+    return image
 
 
 def main():
