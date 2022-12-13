@@ -11,7 +11,6 @@ def solve(lines):
     pairs.append(['[[2]]', '[[6]]'])
 
     def parse(seq):
-        l = []
         currseq = []
         stack = []
         currdig = ''
@@ -60,12 +59,6 @@ def solve(lines):
             return 0
         return -1
 
-    def compare(a, b):
-        pa = parse(a)
-        pb = parse(b)
-
-        return compare_element(pa, pb)
-
     l = []
 
     for a, b in pairs:
@@ -111,18 +104,6 @@ def solve(lines):
 
     l = mergesort(l)
 
-    # i = 0
-    # while i < len(l):
-    #     for j in range(i+1, len(l)):
-    #         comp = compare_element(l[i], l[j])
-    #         if comp == -1:
-    #             l[i], l[j] = l[j], l[i]
-    #             i = -1
-    #             break
-    #     i += 1
-
-    # l.sort(key=compare_element)
-
     m = 1
     print(len(l))
 
@@ -146,5 +127,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-# 90902

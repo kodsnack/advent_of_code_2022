@@ -9,7 +9,6 @@ def solve(lines):
     pairs = grouped_lines(lines)
 
     def parse(seq):
-        l = []
         currseq = []
         stack = []
         currdig = ''
@@ -70,7 +69,6 @@ def solve(lines):
         a, b = pair
 
         if compare(a, b) == 1:
-            print(i+1, pair)
             s += i+1
 
     return s
