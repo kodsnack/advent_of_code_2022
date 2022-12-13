@@ -1,8 +1,8 @@
 import '../util/pos.dart';
 import '../util/util.dart';
 
-//const String inputFile = 'day12/example.txt';
-const String inputFile = 'day12/input.txt';
+const String inputFile = 'day12/example.txt';
+//const String inputFile = 'day12/input.txt';
 
 Future<void> main(List<String> args) async {
   var lines = await readInput(inputFile);
