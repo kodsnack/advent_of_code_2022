@@ -2,7 +2,7 @@ from collections import Counter, defaultdict, deque
 from functools import cache, reduce
 from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
-from helpers import chunks, chunks_with_overlap, columns, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
+from helpers import chunks, chunks_with_overlap, columns, custsort, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
 
 
 def solve(lines):
@@ -65,44 +65,7 @@ def solve(lines):
         l.append(parse(a))
         l.append(parse(b))
 
-    def mergesort(l, comparator):
-        n = len(l)
-
-        if n < 2:
-            return l
-
-        a = l[:n//2]
-        b = l[n//2:]
-
-        ll = []
-
-        la = len(a)
-        lb = len(b)
-        pa = 0
-        pb = 0
-        sa = mergesort(a, comparator)
-        sb = mergesort(b, comparator)
-
-        while pa < la and pb < lb:
-            comp = comparator(sa[pa], sb[pb])
-
-            if comp > 0:
-                ll.append(sb[pb])
-                pb += 1
-            else:
-                ll.append(sa[pa])
-                pa += 1
-
-        while pa < la:
-            ll.append(sa[pa])
-            pa += 1
-        while pb < lb:
-            ll.append(sb[pb])
-            pb += 1
-
-        return ll
-
-    l = mergesort(l, compare_element)
+    l = custsort(l, compare_element)
 
     m = 1
     print(len(l))
