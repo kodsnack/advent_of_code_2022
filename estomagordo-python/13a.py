@@ -37,7 +37,7 @@ def solve(lines):
         if alist and blist:
             for i, ael in enumerate(a):
                 if i == len(b):
-                    return -1
+                    return 1
 
                 comp = compare_element(ael, b[i])
 
@@ -45,17 +45,17 @@ def solve(lines):
                     return comp
 
             if len(b) > len(a):
-                return 1
+                return -1
             return 0
         elif alist:
             return compare_element(a, [b])
         elif blist:
             return compare_element([a], b)
         elif a < b:
-            return 1
+            return -1
         elif a == b:
             return 0
-        return -1
+        return 1
 
     def compare(a, b):
         pa = parse(a)
@@ -68,7 +68,7 @@ def solve(lines):
     for i, pair in enumerate(pairs):
         a, b = pair
 
-        if compare(a, b) == 1:
+        if compare(a, b) == -1:
             s += i+1
 
     return s

@@ -39,7 +39,7 @@ def solve(lines):
         if alist and blist:
             for i, ael in enumerate(a):
                 if i == len(b):
-                    return -1
+                    return 1
 
                 comp = compare_element(ael, b[i])
 
@@ -47,17 +47,17 @@ def solve(lines):
                     return comp
 
             if len(b) > len(a):
-                return 1
+                return -1
             return 0
         elif alist:
             return compare_element(a, [b])
         elif blist:
             return compare_element([a], b)
         elif a < b:
-            return 1
+            return -1
         elif a == b:
             return 0
-        return -1
+        return 1
 
     l = []
 
@@ -65,7 +65,7 @@ def solve(lines):
         l.append(parse(a))
         l.append(parse(b))
 
-    def mergesort(l):
+    def mergesort(l, comparator):
         n = len(l)
 
         if n < 2:
@@ -80,13 +80,13 @@ def solve(lines):
         lb = len(b)
         pa = 0
         pb = 0
-        sa = mergesort(a)
-        sb = mergesort(b)
+        sa = mergesort(a, comparator)
+        sb = mergesort(b, comparator)
 
         while pa < la and pb < lb:
-            comp = compare_element(sa[pa], sb[pb])
+            comp = comparator(sa[pa], sb[pb])
 
-            if comp == -1:
+            if comp > 0:
                 ll.append(sb[pb])
                 pb += 1
             else:
@@ -102,7 +102,7 @@ def solve(lines):
 
         return ll
 
-    l = mergesort(l)
+    l = mergesort(l, compare_element)
 
     m = 1
     print(len(l))
