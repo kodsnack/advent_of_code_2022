@@ -47,18 +47,18 @@ func main() {
 
 	floor := maxy + 2
 
-	simulate := func(part2 bool) int {
+	part1 := func(part2 bool) int {
 		sim := make(map[xy]int)
 		for k, v := range world {
 			sim[k] = v
 		}
 
-		for lol := 0; lol < 1000000; lol++ {
+		for iters := 0; iters < 1000000; iters++ {
 			sand := xy{500, 0}
 
 			moves := 0
 			for {
-				if moves > 1000000 {
+				if moves > maxy {
 					break
 				}
 
@@ -88,8 +88,8 @@ func main() {
 				break
 			}
 
-			if moves > 1000000 || moves == 0 {
-				return lol
+			if moves > maxy || moves == 0 {
+				return iters
 			}
 
 			sim[sand] = 'S'
@@ -98,9 +98,46 @@ func main() {
 		return 0
 	}
 
-	fmt.Println(simulate(false))    // 1072
-	fmt.Println(simulate(true) + 1) // 24659
+	part2 := func() int {
+		Q := []xy{{500, 0}}
+		visited := make(map[xy]struct{})
 
+		for len(Q) > 0 {
+			sand := Q[0]
+			Q = Q[1:]
+
+			if len(visited) > 50_000 {
+				break
+			}
+
+			if _, ok := visited[sand]; ok {
+				continue
+			}
+			visited[sand] = struct{}{}
+
+			if sand[1]+1 >= floor {
+				continue
+			}
+
+			tests := [3]xy{
+				{sand[0], sand[1] + 1},
+				{sand[0] - 1, sand[1] + 1},
+				{sand[0] + 1, sand[1] + 1},
+			}
+
+			for _, test := range tests {
+				if _, ok := world[test]; !ok {
+					Q = append(Q, test)
+				}
+			}
+		}
+
+		return len(visited)
+
+	}
+
+	fmt.Println(part1(false)) // 1072
+	fmt.Println(part2())      // 24659
 }
 
 type xy [2]int
