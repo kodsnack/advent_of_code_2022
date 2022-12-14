@@ -39,49 +39,29 @@ def solve(lines):
     bottommost = max(r[1] for r in rocks)
     
     while True:
-        print(len(sand))
         sx, sy = 500, 0
         keepgoing = True
 
         while keepgoing:
+            keepgoing = False
             while sx >= leftmost and sx <= rightmost and sy < bottommost:
                 if (sx, sy+1) not in rocks and (sx, sy+1) not in sand:
                     sy += 1
+                    keepgoing = True
                     continue
                 if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
                     sy += 1
                     sx -= 1
+                    keepgoing = True
                     continue
                 if (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
                     sy += 1
                     sx += 1
+                    keepgoing = True
                     continue
-                keepgoing = False
                 break
 
-            # if sx < leftmost or sx > rightmost or sy > bottommost:
-            #     break
-
-            # keepgoing = False
-            # # fell = False
-
-            # while (sx, sy+1) not in rocks and (sx, sy+1) not in sand and sy+1 < bottommost:
-            #     # fell = True
-            #     sy += 1
-
-            # # if fell:
-            # #     continue
-
-            # if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
-            #     sx -= 1
-            #     sy += 1
-            #     keepgoing = True
-            # elif (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
-            #     sx += 1
-            #     sy += 1
-            #     keepgoing = True
-
-        if sx < leftmost or sx > rightmost:
+        if sx < leftmost or sx > rightmost or sy >= bottommost:
             break
 
         if (sx, sy) in sand:
@@ -89,21 +69,6 @@ def solve(lines):
 
         sand.add((sx, sy))
 
-    for y in range(0, bottommost+1):
-        row = ''
-
-        for x in range(leftmost, rightmost+1):
-            if (x, y) in rocks:
-                row += '#'
-            elif (x, y) in sand:
-                row += 'O'
-            elif x == 500 and y == 0:
-                row += '+'
-            else:
-                row += '.'
-
-        print(row)
-    
     return len(sand)
 
 
@@ -119,8 +84,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-
-# 873
-# 1395
-# 1376

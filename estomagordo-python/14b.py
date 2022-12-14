@@ -37,7 +37,6 @@ def solve(lines):
     bottommost = max(r[1] for r in rocks)
     
     while True:
-        print(len(sand))
         sx, sy = 500, 0
         keepgoing = True
 
@@ -60,58 +59,11 @@ def solve(lines):
                     continue
                 break
 
-            # if sx < leftmost or sx > rightmost or sy > bottommost:
-            #     break
-
-            # keepgoing = False
-            # # fell = False
-
-            # while (sx, sy+1) not in rocks and (sx, sy+1) not in sand and sy+1 < bottommost:
-            #     # fell = True
-            #     sy += 1
-
-            # # if fell:
-            # #     continue
-
-            # if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
-            #     sx -= 1
-            #     sy += 1
-            #     keepgoing = True
-            # elif (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
-            #     sx += 1
-            #     sy += 1
-            #     keepgoing = True
-
-        # if sx < leftmost or sx > rightmost:
-        #     break
-
         if (sx, sy) in sand:
             break
 
         sand.add((sx, sy))
 
-    leftmost = min(s[0] for s in sand)
-    rightmost = max(s[0] for s in sand)
-
-    for y in range(0, bottommost+3):
-        row = ''
-
-        for x in range(leftmost, rightmost+1):
-            if (x, y) in rocks or y == bottommost + 2:
-                row += '#'
-            elif (x, y) in sand:
-                row += 'O'
-            elif x == 500 and y == 0:
-                row += '+'
-            else:
-                row += '.'
-
-        print(row)
-    
-    # c = 0
-
-    # for 
-    
     return len(sand)
 
 
@@ -127,8 +79,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-
-# 873
-# 1395
-# 1376
