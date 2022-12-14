@@ -44,27 +44,42 @@ def solve(lines):
         keepgoing = True
 
         while keepgoing:
-            if sx < leftmost or sx > rightmost or sy > bottommost:
+            while sx >= leftmost and sx <= rightmost and sy < bottommost:
+                if (sx, sy+1) not in rocks and (sx, sy+1) not in sand:
+                    sy += 1
+                    continue
+                if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
+                    sy += 1
+                    sx -= 1
+                    continue
+                if (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
+                    sy += 1
+                    sx += 1
+                    continue
+                keepgoing = False
                 break
 
-            keepgoing = False
-            # fell = False
+            # if sx < leftmost or sx > rightmost or sy > bottommost:
+            #     break
 
-            while (sx, sy+1) not in rocks and (sx, sy+1) not in sand and sy+1 < bottommost:
-                # fell = True
-                sy += 1
+            # keepgoing = False
+            # # fell = False
 
-            # if fell:
-            #     continue
+            # while (sx, sy+1) not in rocks and (sx, sy+1) not in sand and sy+1 < bottommost:
+            #     # fell = True
+            #     sy += 1
 
-            if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
-                sx -= 1
-                sy += 1
-                keepgoing = True
-            elif (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
-                sx += 1
-                sy += 1
-                keepgoing = True
+            # # if fell:
+            # #     continue
+
+            # if (sx-1, sy+1) not in rocks and (sx-1, sy+1) not in sand:
+            #     sx -= 1
+            #     sy += 1
+            #     keepgoing = True
+            # elif (sx+1, sy+1) not in rocks and (sx+1, sy+1) not in sand:
+            #     sx += 1
+            #     sy += 1
+            #     keepgoing = True
 
         if sx < leftmost or sx > rightmost:
             break
