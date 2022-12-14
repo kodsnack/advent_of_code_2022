@@ -23,8 +23,6 @@ int calcResultPart2(List<String> lines) {
   return grid.findPathFromEtoLevelA();
 }
 
-const int veryLargeNumber = 99999999999999;
-
 class Node {
   int elevation;
   int dist = veryLargeNumber;
