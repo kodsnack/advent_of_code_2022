@@ -1,0 +1,25 @@
+name: Auto update submodules every 30 min 
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/30 * * * *"
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'kodsnack'
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.PRIVATE_TOKEN_GITHUB }}
+      - name: Pull & update submodules recursively
+        run: |
+          git submodule update --init
+          git submodule update --remote
+      - name: Commit
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions - update submodules"
+          git add --all
+          git commit -m "Update submodules" || echo "No changes to commit"
+          git push

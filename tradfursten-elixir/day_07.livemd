@@ -1,0 +1,144 @@
+# AoC 2022 - day 07
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> traverse(["/"], %{"/" => {:dir, "/", nil}})
+    |> find_smaller(100_000)
+    |> Enum.sum()
+  end
+
+  def solve2(input) do
+    filesystem =
+      input
+      |> String.split("\n", trim: true)
+      |> traverse(["/"], %{"/" => {:dir, "/", nil}})
+
+    {:dir, "/", size} = Map.get(filesystem, "/")
+
+    filesystem
+    |> find_larger(30_000_000 - (70_000_000 - size))
+    |> Enum.sort()
+    |> Enum.take(1)
+  end
+
+  defp traverse([], _, filesystem), do: filesystem
+
+  defp traverse(["$ cd /" | tail], _pwd, filesystem), do: traverse(tail, ["/"], filesystem)
+
+  defp traverse(["$ cd .." | tail], pwd, filesystem) do
+    pwd =
+      pwd
+      |> Enum.drop(1)
+
+    traverse(tail, pwd, filesystem)
+  end
+
+  defp traverse(["$ cd " <> dir | tail], pwd, filesystem) do
+    traverse(tail, [dir | pwd], filesystem)
+  end
+
+  defp traverse(["$ ls" | tail], pwd, filesystem) do
+    {files, tail} =
+      tail
+      |> Enum.split_while(fn
+        "$" <> _ -> false
+        _ -> true
+      end)
+
+    filesystem =
+      files
+      |> Enum.reduce(filesystem, fn
+        "dir " <> name, acc ->
+          Map.put(acc, create_path(pwd, name), {:dir, name, nil})
+
+        file, acc ->
+          [size, name] = String.split(file, " ")
+          Map.put(acc, create_path(pwd, name), {:file, name, String.to_integer(size)})
+      end)
+
+    filesystem = update_sizes(pwd, filesystem)
+    traverse(tail, pwd, filesystem)
+  end
+
+  defp create_path(pwd, name) do
+    [name | pwd] |> Enum.reverse() |> Enum.join("/")
+  end
+
+  defp update_sizes([], filesystem), do: filesystem
+
+  defp update_sizes(pwd, filesystem) do
+    current = pwd |> Enum.reverse() |> Enum.join("/")
+
+    files =
+      filesystem
+      |> Map.to_list()
+      |> Enum.filter(fn
+        {path, {:file, _, _}} -> String.starts_with?(path, current)
+        _ -> false
+      end)
+
+    case Enum.all?(files, fn {_, {_, _, a}} -> not is_nil(a) end) do
+      false ->
+        filesystem
+
+      true ->
+        size =
+          files
+          |> Enum.map(fn {_, {_, _, a}} -> a end)
+          |> Enum.sum()
+
+        filesystem =
+          Map.update!(filesystem, current, fn {:dir, name, _} -> {:dir, name, size} end)
+
+        update_sizes(tl(pwd), filesystem)
+    end
+  end
+
+  defp find_smaller(filesystem, max_size) do
+    dirs =
+      filesystem
+      |> Map.to_list()
+      |> Enum.map(fn {_, e} -> e end)
+      |> Enum.filter(fn
+        {:dir, _, _} -> true
+        _ -> false
+      end)
+      |> Enum.filter(fn {_, _, s} -> s <= max_size end)
+      |> Enum.map(fn {_, _, s} -> s end)
+  end
+
+  defp find_larger(filesystem, min_size) do
+    dirs =
+      filesystem
+      |> Map.to_list()
+      |> Enum.map(fn {_, e} -> e end)
+      |> Enum.filter(fn
+        {:dir, _, _} -> true
+        _ -> false
+      end)
+      |> Enum.filter(fn {_, _, s} -> s >= min_size end)
+      |> Enum.map(fn {_, _, s} -> s end)
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```

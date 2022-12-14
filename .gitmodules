@@ -12,7 +12,7 @@
 	url = https://github.com/jofafrazze/advent_of_code_2022.git
 [submodule "p1xelHer0-ocaml"]
 	path = p1xelHer0-ocaml
-  url = git@github.com:p1xelHer0/advent-of-code-2022-ocaml.git
+  url = https://github.com/p1xelHer0/advent-of-code-2022-ocaml.git
 [submodule "nisse-python"]
 	path = nisse-python
 	url = https://github.com/nilskj/AdventOfCode2022.git
@@ -24,7 +24,7 @@
 	url = https://github.com/simon-nystrom/adventofcode-2022.git
 [submodule "albert-arvidsson-elixir"]
 	path = albert-arvidsson-elixir
-	url = git@github.com:scmx/advent-of-code-2022-elixir.git
+	url = https://github.com/scmx/advent-of-code-2022-elixir.git
 [submodule "pin2t-go-swift"]
 	path = pin2t-go-swift
 	url = https://github.com/pin2t/aoc2022
@@ -42,10 +42,59 @@
 	url = https://github.com/f-o/advent-of-code-2022
 [submodule "ingo-rust"]
 	path = ingo-rust
-	url = git@github.com:Ingomancer/AoC2022.git
+	url = https://github.com/Ingomancer/AoC2022.git
 [submodule "johan2b-clojure"]
 	path = johan2b-clojure
-	url = git@github.com:oelrich/advent-of-code-2022.git
+	url = https://github.com/oelrich/advent-of-code-2022.git
 [submodule "jontem-csharp"]
 	path = jontem-csharp
 	url = https://github.com/Jontem/advent-of-code-2022.git
+[submodule "LinAGKar-rust"]
+	path = LinAGKar-rust
+	url = https://github.com/LinAGKar/advent-of-code-2022-rust.git
+[submodule "basicprogrammer10-rust"]
+	path = basicprogrammer10-rust
+	url = https://github.com/Basicprogrammer10/Advent-Of-Code.git
+[submodule "johan1a-rockstar"]
+	path = johan1a-rockstar
+	url = https://github.com/johan1a/advent-of-code-2022-rockstar.git
+[submodule "emil-eriksson-rust"]
+	path = emil-eriksson-rust
+	url = https://github.com/asheidan/advent-of-code-2022-rust.git
+	branch = main
+[submodule "bazeon-csharp"]
+	path = bazeon-csharp
+	url = https://github.com/bazeon/AdventOfCode2022.git
+[submodule "Arisamiga-Python"]
+	path = Arisamiga-Python
+	url = https://github.com/Arisamiga/Advent-Of-Code-2022.git
+[submodule "plux-erlang"]
+	path = plux-erlang
+	url = https://github.com/plux/advent2022.git
+[submodule "valentk777-python"]
+	path = valentk777
+	url = https://github.com/valentk777/Competitive-Programming.git
+[submodule "meck-rust"]
+	path = meck-rust
+	url = https://github.com/meck/AoC2022-rs.git
+[submodule "albertdahlin-c"]
+	path = albertdahlin-c
+	url = https://github.com/albertdahlin/aoc-2022-c.git
+[submodule "yxhuvud-crystal"]
+        path = yxhuvud-crystal
+        url = https://github.com/yxhuvud/aoc22.git
+[submodule "sjoelander-mainframe"]
+	path = sjoelander-mainframe
+	url = https://github.com/Sjoelander/aoc2022.git
+[submodule "blaklinten-bash"]
+	path = blaklinten-bash
+	url = https://github.com/blaklinten/aoc2022
+[submodule "nerarith-haskell"]
+	path = nerarith-haskell
+	url = https://github.com/Nerarith/advent_of_code_2022.git
+[submodule "victormhp-python"]
+	path = victormhp-python
+	url = https://github.com/victormhp/advent-of-code-2022.git
+[submodule "mlogic1-cpp"]
+	path = mlogic1-cpp
+	url = https://github.com/mlogic1/advent-of-code-2022.git

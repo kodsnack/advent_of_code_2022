@@ -1,0 +1,60 @@
+# AoC 2022 - day 04
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse/1)
+    |> Enum.map(&true_overlap?/1)
+    |> Enum.filter(& &1)
+    |> Enum.count()
+  end
+
+  def solve2(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse/1)
+    |> Enum.map(&overlap?/1)
+    |> Enum.filter(&(not &1))
+    |> Enum.count()
+  end
+
+  defp parse(line) do
+    line
+    |> String.split(",")
+    |> Enum.map(&String.split(&1, "-"))
+    |> Enum.map(fn arr -> Enum.map(arr, &String.to_integer/1) end)
+  end
+
+  defp true_overlap?([[a, b], [c, d]]) do
+    cond do
+      a >= c and b <= d -> true
+      c >= a and d <= b -> true
+      true -> false
+    end
+  end
+
+  defp overlap?([[a, b], [c, d]]) do
+    Range.disjoint?(a..b, c..d)
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```

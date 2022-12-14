@@ -1,0 +1,96 @@
+# AoC 2022 - day 09
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    solve_problem(input, 1)
+  end
+
+  def solve2(input) do
+    solve_problem(input, 9)
+  end
+
+  defp parse(line) do
+    [dir, steps] =
+      line
+      |> String.split(" ", trim: true)
+
+    {parse_direction(dir), String.to_integer(steps)}
+  end
+
+  defp parse_direction("R"), do: {1, 0}
+  defp parse_direction("L"), do: {-1, 0}
+  defp parse_direction("U"), do: {0, -1}
+  defp parse_direction("D"), do: {0, 1}
+
+  defp solve_problem(input, knots) do
+    knots = List.duplicate({0, 0}, knots)
+
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse/1)
+    |> move({0, 0}, [knots])
+    |> Enum.map(&List.last/1)
+    |> Enum.uniq()
+    |> Enum.count()
+  end
+
+  defp move([], _, acc), do: acc
+
+  defp move([{_, 0} | rest], head, acc) do
+    move(rest, head, acc)
+  end
+
+  defp move([{dir, steps} | rest], head, [tail | _] = acc) do
+    head = add(head, dir)
+    tail = preform_move(head, tail, []) |> Enum.reverse()
+    move([{dir, steps - 1} | rest], head, [tail | acc])
+  end
+
+  defp preform_move(_, [], acc), do: acc
+
+  defp preform_move(head, [tail | rest], acc) do
+    tail = move_tail(head, tail)
+    preform_move(tail, rest, [tail | acc])
+  end
+
+  defp move_tail({x, y} = head, {a, b} = tail) do
+    case dist(head, tail) do
+      1 ->
+        tail
+
+      0 ->
+        tail
+
+      _other ->
+        cond do
+          y == b -> {a + div(abs(x - a), x - a), b}
+          x == a -> {a, b + div(abs(y - b), y - b)}
+          true -> {a + div(abs(x - a), x - a), b + div(abs(y - b), y - b)}
+        end
+    end
+  end
+
+  defp add({x, y}, {a, b}), do: {x + a, y + b}
+
+  defp dist({x, y}, {a, b}), do: round(:math.sqrt(:math.pow(x - a, 2) + :math.pow(y - b, 2)))
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
