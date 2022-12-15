@@ -101,3 +101,6 @@
 [submodule "decipaliz-rust"]
 	path = decipaliz-rust
 	url = https://github.com/DeciPaliz/adventofcode-2022.git
+[submodule "emlun-rust"]
+	path = emlun-rust
+	url = https://github.com/emlun/adventofcode-2022.git
