@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../util/pos.dart';
+import '../util/range.dart';
 import '../util/util.dart';
 
 //const String inputFile = 'day14/example.txt';
@@ -184,20 +185,6 @@ class Sand {
 
   Pos getPosBelowRight() {
     return Pos(pos.x + 1, pos.y + 1);
-  }
-}
-
-class Range {
-  int xMin = veryLargeNumber;
-  int xMax = -veryLargeNumber;
-  int yMin = veryLargeNumber;
-  int yMax = -veryLargeNumber;
-
-  void extend(Pos point) {
-    xMin = min(xMin, point.x);
-    xMax = max(xMax, point.x);
-    yMin = min(yMin, point.y);
-    yMax = max(yMax, point.y);
   }
 }
 
