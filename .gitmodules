@@ -98,3 +98,6 @@
 [submodule "mlogic1-cpp"]
 	path = mlogic1-cpp
 	url = https://github.com/mlogic1/advent-of-code-2022.git
+[submodule "decipaliz-rust"]
+	path = decipaliz-rust
+	url = https://github.com/DeciPaliz/adventofcode-2022.git
