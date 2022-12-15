@@ -6,28 +6,24 @@ from helpers import chunks, chunks_with_overlap, columns, digits, distance, dist
 
 
 def solve(grid):
-    sy = -1
-    sx = -1
-    gy = -1
-    gx = -1
-    seen = set()
+    from experiments import sssp
 
-    height = len(grid)
-    width = len(grid[0])
+    def stepper(grid, pos):
+        y, x = pos
+        c = grid[y][x]
+        h = ord('a') if c == 'S' else ord(c)
 
-    for y in range(height):
-        for x in range(width):
-            c = grid[y][x]
+        for ny, nx in neighs_bounded(y, x, 0, len(grid)-1, 0, len(grid[0])-1):
+            nc = grid[ny][nx]
+            nh = ord(nc) if nc.islower() else ord('z')
 
-            if c == 'S':
-                sy = y
-                sx = x
-            if c == 'E':
-                gy = y
-                gx = x
+            if nh - h <= 1:
+                yield (1, (ny, nx))
 
-    seen.add((sy, sx))
-    frontier = [[0, sy, sx]]
+    start = [(y, x) for y in range(len(grid)) for x in range(len(grid[0])) if grid[y][x] == 'S'][0]
+    exit = [(y, x) for y in range(len(grid)) for x in range(len(grid[0])) if grid[y][x] == 'E'][0]
+    
+    return sssp(grid, start, lambda position: position == exit, stepper)
 
     for steps, y, x in frontier:
         if y == gy and x == gx:
