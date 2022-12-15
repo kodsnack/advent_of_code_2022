@@ -19,53 +19,57 @@ def solve(lines):
         r = abs(x-bx) + abs(y-by)
         sensors.append([x, y, r])
 
-    def iswithin(sensor, x, y):
-        sx, sy, r = sensor
+    def iswithin(sx, sy, r, x, y):
         d = abs(sx-x) + abs(sy-y)
         
         return d <= r
 
+    def canhave(minx, maxx, miny, maxy):
+        corners = [[minx, miny], [minx, maxy], [maxx, miny], [maxx, maxy]]
+
+        for sx, sy, r in sensors:
+            outside = False
+
+            for cx, cy in corners:
+                if not iswithin(sx, sy, r, cx, cy):
+                    outside = True
+                    break
+
+            if not outside:
+                return False
+
+        return True
     
-    
-    while minx < maxx and miny < maxy:
-        sx = (minx+maxx)//2
-        sy = (miny+maxy)//2
+    frontier = [[(maxx-miny+1) * (maxy-miny+1), minx, maxx, miny, maxy]]
 
-        print(sx, sy)
+    while True:
+        size, minx, maxx, miny, maxy = heappop(frontier)
 
-        if not any(iswithin(sensor, sx, sy) for sensor in sensors):
-            return sx * 4000000 + sy
+        if size == 1:
+            return 4000000 * minx + miny
 
-        goup = False
-        godown = False
-        goleft = False
-        goright = False
+        midx = (minx+maxx)//2
+        midy = (miny+maxy)//2
 
-        for sensor in sensors:
-            if not iswithin(sensor, sx, sy):
-                continue
+        rects = [
+            [minx, midx, miny, midy],
+            [minx, midx, midy, maxy],
+            [midx, maxx, miny, midy],
+            [midx, maxx, midy, maxy]
+        ]
 
-            xdiff = abs(sx-sensor[0])
-            ydiff = abs(sy-sensor[1])
+        if size == 4:
+            rects = [
+                [minx, minx, miny, miny],
+                [minx, minx, maxy, maxy],
+                [maxx, maxx, miny, miny],
+                [maxx, maxx, maxy, maxy]
+            ]
 
-            if xdiff <= ydiff:
-                if sx > sensor[0]:
-                    goright = True
-                else:
-                    goleft = True
-            elif sy > sensor[1]:
-                godown = True
-            else:
-                goup = True
-
-        if goup:
-            miny = sy+1
-        else:
-            maxy = sy-1
-        if goright:
-            minx = sx+1
-        else:
-            maxx = sx-1
+        for rminx, rmaxx, rminy, rmaxy in rects:
+            if canhave(rminx, rmaxx, rminy, rmaxy):
+                area = (rmaxx-rminx+1) * (rmaxy-rminy+1)
+                heappush(frontier, (area, rminx, rmaxx, rminy, rmaxy))
 
 
 def main():
