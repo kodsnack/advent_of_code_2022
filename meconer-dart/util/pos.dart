@@ -74,4 +74,10 @@ class Pos {
     if (pos.y > limity) return Pos(pos.x, limity);
     return pos;
   }
+
+  int manhattanDistance(Pos pos) {
+    int xDist = (pos.x - x).abs();
+    int yDist = (pos.y - y).abs();
+    return xDist + yDist;
+  }
 }
