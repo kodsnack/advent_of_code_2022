@@ -1,0 +1,188 @@
+# AoC 2022 - day 12
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule AoCUtils do
+  def djikstras(world, start, goal) do
+    distances = find_path(world, start, MapSet.new(), Map.new([{start, 0}]))
+
+    goal
+    |> Enum.map(&Map.get(distances, &1, :infinity))
+    |> Enum.min()
+  end
+
+  defp find_path(world, current, visited, distances) do
+    neighbours = world.get_neighbours.(current)
+
+    current_distance = Map.fetch!(distances, current)
+
+    distances =
+      for n <- neighbours, reduce: distances do
+        distances ->
+          case Map.get(distances, n, :infinity) do
+            :infinity ->
+              Map.put(distances, n, current_distance + 1)
+
+            v when v > current_distance + 1 ->
+              Map.put(distances, n, current_distance + 1)
+
+            _ ->
+              distances
+          end
+      end
+
+    visited = MapSet.put(visited, current)
+
+    not_visited =
+      Enum.reject(
+        distances,
+        fn {key, _} -> MapSet.member?(visited, key) end
+      )
+
+    cond do
+      not_visited == [] ->
+        distances
+
+      true ->
+        case Enum.min_by(not_visited, fn {_node, distance} -> distance end) do
+          {_, :infinity} -> distances
+          {next_node, _} -> find_path(world, next_node, visited, distances)
+        end
+    end
+  end
+
+  def neighbours({x, y}) do
+    [{0, -1}, {0, 1}, {-1, 0}, {1, 0}]
+    |> Enum.map(fn {x_n, y_n} -> {x_n + x, y_n + y} end)
+  end
+end
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    map = create_map(input)
+
+    get_neighbours = fn coord ->
+      {height, _} = Map.get(map, coord)
+
+      AoCUtils.neighbours(coord)
+      |> Enum.map(fn n ->
+        {n, Map.get(map, n, nil)}
+      end)
+      |> Enum.filter(&(not is_nil(elem(&1, 1))))
+      |> Enum.filter(fn {_, {neighbour_height, _}} ->
+        neighbour_height <= height + 1
+      end)
+      |> Enum.map(&elem(&1, 0))
+    end
+
+    world = %{get_neighbours: get_neighbours}
+
+    start =
+      map
+      |> Map.to_list()
+      |> Enum.filter(fn
+        {_, {0, :start}} -> true
+        _ -> false
+      end)
+      |> (fn [{coord, _node}] -> coord end).()
+
+    goal =
+      map
+      |> Map.to_list()
+      |> Enum.filter(fn
+        {_, {_, :end}} -> true
+        _ -> false
+      end)
+      |> (fn [{coord, _node}] -> coord end).()
+
+    AoCUtils.djikstras(world, start, [goal])
+  end
+
+  def solve2(input) do
+    map = create_map(input)
+
+    get_neighbours = fn coord ->
+      {height, _} = Map.get(map, coord)
+
+      AoCUtils.neighbours(coord)
+      |> Enum.map(fn n ->
+        {n, Map.get(map, n, nil)}
+      end)
+      |> Enum.filter(&(not is_nil(elem(&1, 1))))
+      |> Enum.filter(fn {_, {neighbour_height, _}} ->
+        height - neighbour_height <= 1
+      end)
+      |> Enum.map(&elem(&1, 0))
+    end
+
+    world = %{get_neighbours: get_neighbours}
+
+    starts =
+      map
+      |> Map.to_list()
+      |> Enum.filter(fn
+        {_, {0, _}} -> true
+        _ -> false
+      end)
+      |> Enum.map(fn {coord, _} -> coord end)
+
+    goal =
+      map
+      |> Map.to_list()
+      |> Enum.filter(fn
+        {_, {_, :end}} -> true
+        _ -> false
+      end)
+      |> (fn [{coord, _node}] -> coord end).()
+
+    AoCUtils.djikstras(world, goal, starts)
+  end
+
+  defp create_map(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.with_index()
+    |> Enum.flat_map(fn {line, y} ->
+      line
+      |> String.split("", trim: true)
+      |> Enum.with_index()
+      |> Enum.map(fn {c, x} ->
+        c = parse_elevation(c)
+        {{x, y}, c}
+      end)
+    end)
+    |> Enum.into(%{})
+  end
+
+  defp parse_elevation("S"), do: {0, :start}
+  defp parse_elevation("E"), do: {?z - ?a, :end}
+
+  defp parse_elevation(x) do
+    height =
+      x
+      |> String.to_charlist()
+      |> Enum.at(0)
+
+    {height - ?a, :node}
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
