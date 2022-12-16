@@ -9,8 +9,7 @@ def solve(lines):
     keyline = 2000000
     nots = set()
 
-    for i, line in enumerate(lines):
-        print(i)
+    for line in lines:
         x, y, bx, by = ints(line)
         d = abs(bx-x) + abs(by-y)
 
