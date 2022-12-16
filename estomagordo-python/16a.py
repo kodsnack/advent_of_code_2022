@@ -46,50 +46,45 @@ def solve(lines):
 
         distances[u] = mapping
 
-    # opened = set()
-    limit = 30
-    # best = 0
-    frontier = [[limit, 0, 'AA', []]]
-    # seen = defaultdict(set)
-    paths = set()
-    highest = 0
+    def optimize(limit, start, usable):
+        frontier = [[limit, 0, start, []]]
+        paths = set()
+        highest = 0
+        best = []
 
-    while frontier:
-        remaining, score, valve, used = heappop(frontier)
+        while frontier:
+            remaining, score, valve, used = heappop(frontier)
 
-        if score > highest:
-            print(score, used, limit-remaining)
-            highest = score
+            if score > highest:
+                highest = score
+                best = used
 
-        if remaining == 0:
-            continue
-
-        # if remaining == 0:
-        #     best = max(best, released)
-        #     continue
-
-        if valve in useful and valve not in used:
-            heappush(frontier, [remaining-1, score + valves[valve][0] * (remaining-1), valve, used + [valve]])
-
-        for u in useful:
-            if u in used:
+            if remaining == 0:
                 continue
 
-            if u == valve:
-                continue
+            if valve in usable and valve not in used:
+                heappush(frontier, [remaining-1, score + valves[valve][0] * (remaining-1), valve, used + [valve]])
 
-            taking = distances[valve][u]
-            arrival = remaining-taking
+            for u in usable:
+                if u in used:
+                    continue
 
-            if arrival > 0:
-                t = tuple(used + [u])
+                if u == valve:
+                    continue
 
-                if t not in paths:
-                    paths.add(t)
-                    heappush(frontier, [arrival, score, u, list(used)])
+                taking = distances[valve][u]
+                arrival = remaining-taking
+
+                if arrival > 0:
+                    t = tuple(used + [u])
+
+                    if t not in paths:
+                        paths.add(t)
+                        heappush(frontier, [arrival, score, u, list(used)])
+
+        return highest, best
     
-    return highest
-        
+    return optimize(30, 'AA', useful)[0]
 
 
 def main():

@@ -46,64 +46,60 @@ def solve(lines):
 
         distances[u] = mapping
 
-    # opened = set()
-    limit = 26
-    # best = 0
-    frontier = [[limit, 0, 0, 0, 'AA', 'AA', []]]
-    # seen = defaultdict(set)
-    paths = set()
-    highest = 0
+    def optimize(limit, start, usable):
+        frontier = [[limit, 0, start, []]]
+        paths = set()
+        highest = 0
+        best = []
 
-    while frontier:
-        remaining, score, mewait, elwait, me, elephant, used = heappop(frontier)
+        while frontier:
+            remaining, score, valve, used = heappop(frontier)
 
-        if score > highest:
-            print(score, used, limit-remaining)
-            highest = score
+            if score > highest:
+                highest = score
+                best = used
 
-        if remaining == 0:
-            continue
+            if remaining == 0:
+                continue
 
-        # if remaining == 0:
-        #     best = max(best, released)
-        #     continue
+            if valve in usable and valve not in used:
+                heappush(frontier, [remaining-1, score + valves[valve][0] * (remaining-1), valve, used + [valve]])
 
-        meopen = valves[me][0] * max(0, remaining-1-mewait) if me in useful and me not in used else 0
-        elopen = valves[elephant][0] * max(0, remaining-1-elwait) if elephant in useful and elephant not in used and me != elephant else 0
-        
-        if meopen or elopen:
-            newused = list(used)
-            if meopen:
-                newused.append(me)
-            if elopen:
-                newused.append(elephant)
-            heappush(frontier, [remaining-1, score + meopen + elopen, max(0,mewait-1), max(0,elwait-1), me, elephant, newused])
-
-        for u in useful:
-            for v in useful:
-                if u in used + [me] and v in used + [elephant]:
+            for u in usable:
+                if u in used:
                     continue
 
-                metaking = distances[me][u]+mewait
-                eltaking = distances[elephant][v]+elwait
-                taking = min(metaking, eltaking)
+                if u == valve:
+                    continue
+
+                taking = distances[valve][u]
                 arrival = remaining-taking
 
                 if arrival > 0:
-                    newused = list(used)
-                    if u not in newused:
-                        newused.append(u)
-                    if v not in newused:
-                        newused.append(v)
-
-                    t = tuple(newused)
+                    t = tuple(used + [u])
 
                     if t not in paths:
                         paths.add(t)
-                        heappush(frontier, [arrival, score, metaking-taking, eltaking-taking, u, v, list(used)])
+                        heappush(frontier, [arrival, score, u, list(used)])
+
+        return highest, best
+
+    highest = 0
+    usefulcount = len(useful)
+    order = sorted(range(1, usefulcount), key=lambda n: abs(n-usefulcount//2))
+    print(order)
+
+    for n in order:
+        for c in combinations(useful, n):
+            remaining = [u for u in useful if u not in c]
+
+            score = optimize(26, 'AA', c)[0] + optimize(26, 'AA', remaining)[0]
+            
+            if score > highest:
+                print(score)
+                highest = score
     
-    return highest
-        
+    return highest        
 
 
 def main():
@@ -118,3 +114,6 @@ def main():
 
 if __name__ == '__main__':
     print(main())
+
+
+# 2185
