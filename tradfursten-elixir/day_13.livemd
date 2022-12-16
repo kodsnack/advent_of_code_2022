@@ -1,0 +1,98 @@
+# AoC 2022 - day 13
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day13 do
+  def solve1(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.chunk_every(2)
+    |> Enum.map(fn [a, b] ->
+      {a, _} = Code.eval_string(a)
+      {b, _} = Code.eval_string(b)
+      {a, b}
+    end)
+    |> Enum.map(fn {a, b} ->
+      compare(a, b)
+      # PacketComparator.compare(a, b)
+    end)
+    |> Enum.with_index()
+    |> Enum.filter(fn {a, _} -> a end)
+    |> Enum.map(fn {_, i} -> i + 1 end)
+    |> Enum.sum()
+  end
+
+  def solve2(input) do
+    packages =
+      input
+      |> String.split("\n", trim: true)
+      |> Enum.map(fn a ->
+        {a, _} = Code.eval_string(a)
+        a
+      end)
+
+    divider_one = [[2]]
+    divider_two = [[6]]
+
+    packages =
+      [divider_one | [divider_two | packages]]
+      |> Enum.reduce([], fn a, acc ->
+        {less, greater} = acc |> Enum.split_while(fn x -> compare(x, a) end)
+        less ++ [a] ++ greater
+      end)
+
+    index_one = Enum.find_index(packages, fn a -> a == divider_one end) + 1
+    index_two = Enum.find_index(packages, fn a -> a == divider_two end) + 1
+    index_one * index_two
+  end
+
+  defp compare([a | at], [a | bt]), do: compare(at, bt)
+  defp compare([], _), do: true
+  defp compare(_, []), do: false
+
+  defp compare([a | at], [b | bt]) do
+    case compare_item(a, b) do
+      :continue -> compare(at, bt)
+      valid -> valid
+    end
+  end
+
+  defp compare_item([], _), do: true
+  defp compare_item(_, []), do: false
+
+  defp compare_item(a, b) when is_integer(a) and is_integer(b) do
+    cond do
+      a < b -> true
+      a == b -> :continue
+      b < a -> false
+    end
+  end
+
+  defp compare_item(a, b) when is_list(a) and is_integer(b) do
+    compare(a, [b])
+  end
+
+  defp compare_item(a, b) when is_integer(a) and is_list(b) do
+    compare([a], b)
+  end
+
+  defp compare_item(a, b), do: compare(a, b)
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day13.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day13.solve2()
+```
