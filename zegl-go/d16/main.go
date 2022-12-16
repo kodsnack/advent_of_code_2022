@@ -3,21 +3,24 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
+	"time"
 )
 
 //go:embed input.txt
 var input string
 
+type valve struct {
+	flowRate  int
+	connected []string
+}
+
 func main() {
 	input = strings.TrimSpace(input)
 
-	type valve struct {
-		flowRate  int
-		connected []string
-	}
 	valves := make(map[string]valve)
 
 	for _, row := range strings.Split(input, "\n") {
@@ -39,6 +42,99 @@ func main() {
 			idx++
 		}
 	}
+
+	t0 := time.Now()
+	fmt.Println("part1", part1(valves, openValveIdx), time.Since(t0))
+	fmt.Println("part2", part2(valves, openValveIdx), time.Since(t0))
+}
+
+func part1(valves map[string]valve, openValveIdx map[string]int) int {
+	type qi struct {
+		open    [16]bool
+		at      string
+		minute  int
+		flow    int
+		sumflow int
+	}
+
+	Q := []qi{{at: "AA", minute: 1}}
+
+	var largestFlow int
+	var allTrue uint16 = math.MaxUint16
+
+	seen := make(map[string]map[uint16]int)
+
+nextQ:
+	for {
+		if len(Q) == 0 {
+			break
+		}
+		q := Q[0]
+		Q = Q[1:]
+
+		if q.minute > 30 {
+			largestFlow = max(largestFlow, q.sumflow)
+			continue
+		}
+
+		bm := bitmap(q.open)
+		if seens, ok := seen[q.at]; !ok {
+			seen[q.at] = make(map[uint16]int)
+		} else {
+			for k, v := range seens {
+				if v >= q.sumflow {
+					if k == bm || k&bm > 0 {
+						continue nextQ
+					}
+				}
+			}
+		}
+		seen[q.at][bm] = q.sumflow
+
+		open := q.open[openValveIdx[q.at]]
+
+		if bm == allTrue {
+			// stay put
+			Q = append(Q, qi{
+				at:      q.at,
+				open:    q.open,
+				minute:  q.minute + 1,
+				flow:    q.flow,
+				sumflow: q.sumflow + q.flow,
+			})
+		} else {
+			if !open && valves[q.at].flowRate > 0 {
+				opens := q.open
+				opens[openValveIdx[q.at]] = true
+				Q = append(Q, qi{
+					at:      q.at,
+					open:    opens,
+					minute:  q.minute + 1,
+					flow:    q.flow + valves[q.at].flowRate,
+					sumflow: q.sumflow + q.flow,
+				})
+			}
+
+			// if at open valve, go to connected valves
+			if open || valves[q.at].flowRate == 0 {
+				for _, v := range valves[q.at].connected {
+					opens := q.open
+					Q = append(Q, qi{
+						at:      v,
+						open:    opens,
+						minute:  q.minute + 1,
+						flow:    q.flow,
+						sumflow: q.sumflow + q.flow,
+					})
+				}
+			}
+		}
+	}
+
+	return largestFlow
+}
+
+func part2(valves map[string]valve, openValveIdx map[string]int) int {
 	type qi struct {
 		open    [16]bool
 		ats     [2]string
@@ -54,12 +150,14 @@ func main() {
 		}
 	}
 
+	var allTrue uint16 = math.MaxUint16
+
 	Q := []qi{{ats: [2]string{"AA", "AA"}, minute: 1}}
 
 	var largestFlow int
 	var maxminute = 0
 
-	seen := make(map[string]map[[16]bool]int)
+	seen := make(map[[2]string]map[uint16]int)
 
 	withFlowCount := 0
 	for _, v := range valves {
@@ -77,7 +175,6 @@ nextQ:
 		Q = Q[1:]
 
 		if q.minute > maxminute {
-			fmt.Println("minute", q.minute, len(Q))
 			maxminute = q.minute
 		}
 
@@ -86,29 +183,19 @@ nextQ:
 			continue
 		}
 
-		at := q.ats[0] + "-" + q.ats[1]
-		if seens, ok := seen[at]; !ok {
-			seen[at] = make(map[[16]bool]int)
+		bm := bitmap(q.open)
+		if seens, ok := seen[q.ats]; !ok {
+			seen[q.ats] = make(map[uint16]int)
 		} else {
 			for k, v := range seens {
 				if v >= q.sumflow {
-					if isSubset(q.open, k) {
+					if k == bm || k&bm > 0 {
 						continue nextQ
 					}
 				}
 			}
 		}
-
-		seen[at][q.open] = q.sumflow
-
-		openCount := 0
-		for _, v := range q.open {
-			if v {
-				openCount++
-			}
-		}
-
-		allOpen := openCount == withFlowCount
+		seen[q.ats][bm] = q.sumflow
 
 		type cando struct {
 			at      string
@@ -118,18 +205,17 @@ nextQ:
 
 		var candos [2][]cando
 
-		for idx := range [2]int{0, 1} {
+		for idx := 0; idx < 2; idx++ {
 			var moves []cando
 
 			at := q.ats[idx]
 			atOpen := q.open[openValveIdx[at]]
 
-			// stay
-			moves = append(moves, cando{at: at})
-			candos[idx] = moves
-
 			// move only if we can gain something
-			if !allOpen {
+			if bm == allTrue {
+				// stay
+				moves = append(moves, cando{at: at})
+			} else {
 				// open valve
 				if !atOpen && valves[at].flowRate > 0 {
 					moves = append(moves, cando{
@@ -152,6 +238,7 @@ nextQ:
 		// all combos
 		for _, you := range candos[0] {
 			for _, ele := range candos[1] {
+				// both can not open same valve, skip combo
 				if you.newOpen != "" && you.newOpen == ele.newOpen {
 					continue
 				}
@@ -182,17 +269,17 @@ nextQ:
 		}
 	}
 
-	fmt.Println(largestFlow)
+	return largestFlow
 }
 
-// if all values in a are set in b
-func isSubset(a, b [16]bool) bool {
-	for k, v := range a {
-		if v && !b[k] {
-			return false
+func bitmap(in [16]bool) uint16 {
+	var res uint16
+	for i := range in {
+		if in[i] {
+			res |= 1 << i
 		}
 	}
-	return true
+	return res
 }
 
 func max(a, b int) int {
