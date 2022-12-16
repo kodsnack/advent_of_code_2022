@@ -48,9 +48,34 @@ func main() {
 	fmt.Println("part2", part2(valves, openValveIdx), time.Since(t0))
 }
 
+type move struct {
+	at      string
+	newOpen string
+	addFlow int
+}
+
+func moves(open uint16, at string, valves map[string]valve, openValveIdx map[string]int) []move {
+	var res []move
+	var allTrue uint16 = math.MaxUint16
+	isOpen := open&(1<<openValveIdx[at]) > 0
+	if open == allTrue {
+		res = append(res, move{at: at})
+	} else {
+		if !isOpen && valves[at].flowRate > 0 {
+			res = append(res, move{at, at, valves[at].flowRate})
+		}
+		if isOpen || valves[at].flowRate == 0 {
+			for _, v := range valves[at].connected {
+				res = append(res, move{at: v})
+			}
+		}
+	}
+	return res
+}
+
 func part1(valves map[string]valve, openValveIdx map[string]int) int {
 	type qi struct {
-		open    [16]bool
+		open    uint16
 		at      string
 		minute  int
 		flow    int
@@ -58,10 +83,7 @@ func part1(valves map[string]valve, openValveIdx map[string]int) int {
 	}
 
 	Q := []qi{{at: "AA", minute: 1}}
-
 	var largestFlow int
-	var allTrue uint16 = math.MaxUint16
-
 	seen := make(map[string]map[uint16]int)
 
 nextQ:
@@ -77,57 +99,32 @@ nextQ:
 			continue
 		}
 
-		bm := bitmap(q.open)
 		if seens, ok := seen[q.at]; !ok {
 			seen[q.at] = make(map[uint16]int)
 		} else {
 			for k, v := range seens {
 				if v >= q.sumflow {
-					if k == bm || k&bm > 0 {
+					if k == q.open || k&q.open > 0 {
 						continue nextQ
 					}
 				}
 			}
 		}
-		seen[q.at][bm] = q.sumflow
+		seen[q.at][q.open] = q.sumflow
 
-		open := q.open[openValveIdx[q.at]]
-
-		if bm == allTrue {
-			// stay put
+		moves := moves(q.open, q.at, valves, openValveIdx)
+		for _, m := range moves {
+			o := q.open
+			if m.newOpen != "" {
+				o = o | (1 << openValveIdx[m.newOpen])
+			}
 			Q = append(Q, qi{
-				at:      q.at,
-				open:    q.open,
+				at:      m.at,
+				open:    o,
 				minute:  q.minute + 1,
-				flow:    q.flow,
+				flow:    q.flow + m.addFlow,
 				sumflow: q.sumflow + q.flow,
 			})
-		} else {
-			if !open && valves[q.at].flowRate > 0 {
-				opens := q.open
-				opens[openValveIdx[q.at]] = true
-				Q = append(Q, qi{
-					at:      q.at,
-					open:    opens,
-					minute:  q.minute + 1,
-					flow:    q.flow + valves[q.at].flowRate,
-					sumflow: q.sumflow + q.flow,
-				})
-			}
-
-			// if at open valve, go to connected valves
-			if open || valves[q.at].flowRate == 0 {
-				for _, v := range valves[q.at].connected {
-					opens := q.open
-					Q = append(Q, qi{
-						at:      v,
-						open:    opens,
-						minute:  q.minute + 1,
-						flow:    q.flow,
-						sumflow: q.sumflow + q.flow,
-					})
-				}
-			}
 		}
 	}
 
@@ -136,35 +133,16 @@ nextQ:
 
 func part2(valves map[string]valve, openValveIdx map[string]int) int {
 	type qi struct {
-		open    [16]bool
+		open    uint16
 		ats     [2]string
 		minute  int
 		flow    int
 		sumflow int
 	}
 
-	open := [16]bool{}
-	for k := range valves {
-		if valves[k].flowRate > 0 {
-			open[openValveIdx[k]] = true
-		}
-	}
-
-	var allTrue uint16 = math.MaxUint16
-
 	Q := []qi{{ats: [2]string{"AA", "AA"}, minute: 1}}
-
 	var largestFlow int
-	var maxminute = 0
-
 	seen := make(map[[2]string]map[uint16]int)
-
-	withFlowCount := 0
-	for _, v := range valves {
-		if v.flowRate > 0 {
-			withFlowCount++
-		}
-	}
 
 nextQ:
 	for {
@@ -174,80 +152,42 @@ nextQ:
 		q := Q[0]
 		Q = Q[1:]
 
-		if q.minute > maxminute {
-			maxminute = q.minute
-		}
-
 		if q.minute > 26 {
 			largestFlow = max(largestFlow, q.sumflow)
 			continue
 		}
 
-		bm := bitmap(q.open)
 		if seens, ok := seen[q.ats]; !ok {
 			seen[q.ats] = make(map[uint16]int)
 		} else {
 			for k, v := range seens {
 				if v >= q.sumflow {
-					if k == bm || k&bm > 0 {
+					if k == q.open || k&q.open > 0 {
 						continue nextQ
 					}
 				}
 			}
 		}
-		seen[q.ats][bm] = q.sumflow
+		seen[q.ats][q.open] = q.sumflow
 
-		type cando struct {
-			at      string
-			newOpen string
-			addFlow int
-		}
-
-		var candos [2][]cando
-
+		var candos [2][]move
 		for idx := 0; idx < 2; idx++ {
-			var moves []cando
-
-			at := q.ats[idx]
-			atOpen := q.open[openValveIdx[at]]
-
-			// move only if we can gain something
-			if bm == allTrue {
-				// stay
-				moves = append(moves, cando{at: at})
-			} else {
-				// open valve
-				if !atOpen && valves[at].flowRate > 0 {
-					moves = append(moves, cando{
-						at:      at,
-						newOpen: at,
-						addFlow: valves[at].flowRate,
-					})
-				}
-				// go to connected
-				if atOpen || valves[at].flowRate == 0 {
-					for _, v := range valves[at].connected {
-						moves = append(moves, cando{at: v})
-					}
-				}
-			}
-
-			candos[idx] = moves
+			candos[idx] = moves(q.open, q.ats[idx], valves, openValveIdx)
 		}
 
-		// all combos
 		for _, you := range candos[0] {
 			for _, ele := range candos[1] {
-				// both can not open same valve, skip combo
 				if you.newOpen != "" && you.newOpen == ele.newOpen {
 					continue
 				}
 				open := q.open
 				if you.newOpen != "" {
-					open[openValveIdx[you.newOpen]] = true
+					idx := openValveIdx[you.newOpen]
+					open |= 1 << idx
 				}
 				if ele.newOpen != "" {
-					open[openValveIdx[ele.newOpen]] = true
+					idx := openValveIdx[ele.newOpen]
+					open |= 1 << idx
 				}
 
 				// sort ats ===== speed
@@ -270,16 +210,6 @@ nextQ:
 	}
 
 	return largestFlow
-}
-
-func bitmap(in [16]bool) uint16 {
-	var res uint16
-	for i := range in {
-		if in[i] {
-			res |= 1 << i
-		}
-	}
-	return res
 }
 
 func max(a, b int) int {
