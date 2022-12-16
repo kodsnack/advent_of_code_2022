@@ -49,13 +49,13 @@ def solve(lines):
     # opened = set()
     limit = 26
     # best = 0
-    frontier = [[limit, 0, 'AA', 'AA', []]]
+    frontier = [[limit, 0, 0, 0, 'AA', 'AA', []]]
     # seen = defaultdict(set)
     paths = set()
     highest = 0
 
     while frontier:
-        remaining, score, me, elephant, used = heappop(frontier)
+        remaining, score, mewait, elwait, me, elephant, used = heappop(frontier)
 
         if score > highest:
             print(score, used, limit-remaining)
@@ -68,8 +68,8 @@ def solve(lines):
         #     best = max(best, released)
         #     continue
 
-        meopen = valves[me][0] * (remaining-1) if me in useful and me not in used else 0
-        elopen = valves[elephant][0] * (remaining-1) if elephant in useful and elephant not in used and me != elephant else 0
+        meopen = valves[me][0] * max(0, remaining-1-mewait) if me in useful and me not in used else 0
+        elopen = valves[elephant][0] * max(0, remaining-1-elwait) if elephant in useful and elephant not in used and me != elephant else 0
         
         if meopen or elopen:
             newused = list(used)
@@ -77,17 +77,16 @@ def solve(lines):
                 newused.append(me)
             if elopen:
                 newused.append(elephant)
-            heappush(frontier, [remaining-1, score + meopen + elopen, valve, elephant, newused])
+            heappush(frontier, [remaining-1, score + meopen + elopen, max(0,mewait-1), max(0,elwait-1), me, elephant, newused])
 
         for u in useful:
             for v in useful:
-                if u in used and v in used:
+                if u in used + [me] and v in used + [elephant]:
                     continue
 
-                if u == valve and v == valve:
-                    continue
-
-                taking = max(distances[me][u], distances[elephant][v])
+                metaking = distances[me][u]+mewait
+                eltaking = distances[elephant][v]+elwait
+                taking = min(metaking, eltaking)
                 arrival = remaining-taking
 
                 if arrival > 0:
@@ -101,7 +100,7 @@ def solve(lines):
 
                     if t not in paths:
                         paths.add(t)
-                        heappush(frontier, [arrival, score, u, v, list(used)])
+                        heappush(frontier, [arrival, score, metaking-taking, eltaking-taking, u, v, list(used)])
     
     return highest
         
