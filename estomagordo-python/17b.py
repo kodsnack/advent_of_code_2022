@@ -18,39 +18,29 @@ def solve(lines):
     ]
 
     solid = {(0, x) for x in range(7)}
-    n = 500000
+    n = 2500
+    cyclen = 35
+    prev = n-cyclen
+    prevbot = 0
+    target = 1000000000000
+    magic = 28571428500
     c = Counter()
     bottom = 0
-
-    def holes():
-        h = []
-        y = bottom
-
-        while True:
-            left = []
-
-            for x in range(4):
-                if all((y, xx) not in solid for xx in range(x, x+4)):
-                    left.append(x)
-
-            if left:
-                h.append(tuple(left))
-            else:
-                break
-
-            y -= 1
-
-        return tuple(h)
     
     last = 0
-    lastholes = holes()
     
     for x in range(n):
-        if x > 0 and x % 5 == 0 and p % m == 0:
-            print(x)
-            c[(lastholes, bottom-last)] += 1
+        if x == prev:
+            prevbot = bottom
+        if x > 0 and x % 5 == 0:
+            if x > 500:
+                c[(p%m, bottom-last)] += 1
             last = bottom
-            lastholes = holes()
+        # if x > 0 and x % 5 == 0 and p % m == 0:
+        #     print(x)
+        #     c[(lastholes, bottom-last)] += 1
+        #     last = bottom
+        #     lastholes = holes()
 
         shape = []
 
@@ -93,8 +83,9 @@ def solve(lines):
             solid.add((y, x))
             bottom = max(bottom, y)
 
-    for k in sorted(c.keys()):
-        print(k, c[k])
+    cycval = bottom-prevbot
+
+    return bottom + cycval * magic
 
 
 def main():
