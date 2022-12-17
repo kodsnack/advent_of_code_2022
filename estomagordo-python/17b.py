@@ -18,12 +18,12 @@ def solve(lines):
     ]
 
     solid = {(0, x) for x in range(7)}
-    n = 2500
-    cyclen = 35
+    n = 250000
+    cyclen = 345*5
     prev = n-cyclen
     prevbot = 0
     target = 1000000000000
-    magic = 28571428500
+    magic = 579710000
     c = Counter()
     bottom = 0
     
@@ -33,8 +33,7 @@ def solve(lines):
         if x == prev:
             prevbot = bottom
         if x > 0 and x % 5 == 0:
-            if x > 500:
-                c[(p%m, bottom-last)] += 1
+            c[(p%m, bottom-last)] += 1
             last = bottom
         # if x > 0 and x % 5 == 0 and p % m == 0:
         #     print(x)
@@ -83,6 +82,13 @@ def solve(lines):
             solid.add((y, x))
             bottom = max(bottom, y)
 
+    # cyclen = 0
+    # for k in sorted(c.keys()):
+    #     if c[k] > 1:
+    #         print(k, c[k])
+    #         cyclen += 1
+    
+    # return cyclen
     cycval = bottom-prevbot
 
     return bottom + cycval * magic
@@ -100,3 +106,6 @@ def main():
 
 if __name__ == '__main__':
     print(main())
+
+
+# 1524638059865 too high
