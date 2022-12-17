@@ -8,7 +8,6 @@ from helpers import chunks, chunks_with_overlap, columns, custsort, digits, dist
 def solve(lines):
     moves = lines[0].rstrip()
     m = len(moves)
-    p = 0
     shapes = [
         [(0, 2), (0, 3), (0, 4), (0, 5)],
         [(0, 3), (1, 2), (1, 3), (1, 4), (2, 3)],
@@ -17,37 +16,11 @@ def solve(lines):
         [(0, 2), (0, 3), (1, 2), (1, 3)]
     ]
 
-    solid = {(0, x) for x in range(7)}
-    n = 250000
-    cyclen = 345*5
-    prev = n-cyclen
-    prevbot = 0
-    target = 1000000000000
-    magic = 579710000
-    c = Counter()
-    bottom = 0
-    
-    last = 0
-    
-    for x in range(n):
-        if x == prev:
-            prevbot = bottom
-        if x > 0 and x % 5 == 0:
-            c[(p%m, bottom-last)] += 1
-            last = bottom
-        # if x > 0 and x % 5 == 0 and p % m == 0:
-        #     print(x)
-        #     c[(lastholes, bottom-last)] += 1
-        #     last = bottom
-        #     lastholes = holes()
-
-        shape = []
-
-        for y, x in shapes[x%5]:
-            shape.append([bottom+4+y, x])
+    def step(solid, shapenum, movepos, bottom):
+        shape = [[bottom+4+s[0], s[1]] for s in shapes[shapenum%5]]
 
         while True:
-            push = 1 if moves[p % m] == '>' else -1
+            push = 1 if moves[movepos%m] == '>' else -1
             cango = True
 
             for y, x in shape:
@@ -63,7 +36,7 @@ def solve(lines):
                 for i in range(len(shape)):
                     shape[i][1] += push
 
-            p += 1
+            movepos += 1
 
             canfall = True
 
@@ -77,18 +50,38 @@ def solve(lines):
 
             for i in range(len(shape)):
                 shape[i][0] -= 1
-        a=2
+        
         for y, x in shape:
             solid.add((y, x))
             bottom = max(bottom, y)
 
-    # cyclen = 0
-    # for k in sorted(c.keys()):
-    #     if c[k] > 1:
-    #         print(k, c[k])
-    #         cyclen += 1
+        return solid, movepos, bottom
+            
+    solid = {(0, x) for x in range(7)}
+    bottom = 0
+    shapenum = 0
+    movepos = 0    
+    cycledetectlen = 25000
+    cyclegrowths = Counter()
+    lastcycle = 0
+
+    for _ in range(cycledetectlen):
+        solid, movepos, bottom = step(solid, shapenum, movepos, bottom)
+        shapenum += 1
+
+        if shapenum % 5 == 0:
+            cyclegrowths[bottom-lastcycle] += 1
+            lastcycle = bottom
+
+    cyclen = 345*5
+    prev = n-cyclen
+    prevbot = 0
+    target = 1000000000000
+    magic = 579710000
+    bottom = 0    
+    last = 0
     
-    # return cyclen
+    
     cycval = bottom-prevbot
 
     return bottom + cycval * magic
@@ -106,6 +99,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-
-# 1524638059865 too high

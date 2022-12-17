@@ -20,6 +20,7 @@ def solve(lines):
     ]
 
     solid = {(0, x) for x in range(7)}
+    bottom = 0
 
     for x in range(n):
         bottom = max(s[0] for s in solid)
@@ -59,11 +60,12 @@ def solve(lines):
 
             for i in range(len(shape)):
                 shape[i][0] -= 1
-        a=2
+        
         for y, x in shape:
             solid.add((y, x))
+            bottom = max(bottom, y)
 
-    return max(s[0] for s in solid)
+    return bottom
 
 
 def main():
