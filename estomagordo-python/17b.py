@@ -27,7 +27,6 @@ def solve(lines):
         y = bottom
 
         while True:
-            xs = [x for x in range(7) if (y, x) in solid]
             left = []
 
             for x in range(4):
@@ -39,7 +38,7 @@ def solve(lines):
             else:
                 break
 
-            y += 1
+            y -= 1
 
         return tuple(h)
     
