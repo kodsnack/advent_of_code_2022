@@ -26,6 +26,14 @@ day13a = __import__('13a')
 day13b = __import__('13b')
 day14a = __import__('14a')
 day14b = __import__('14b')
+day15a = __import__('15a')
+day15b = __import__('15b')
+day16a = __import__('16a')
+day16b = __import__('16b')
+day17a = __import__('17a')
+day17b = __import__('17b')
+day18a = __import__('18a')
+day18b = __import__('18b')
 
 
 def test_1a():
@@ -166,3 +174,43 @@ def test_14a():
 def test_14b():
     result = day14b.main()
     assert(26683 == result)
+
+
+def test_15a():
+    result = day15a.main()
+    assert(4560025 == result)
+
+
+def test_15b():
+    result = day15b.main()
+    assert(12480406634249 == result)
+
+
+def test_16a():
+    result = day16a.main()
+    assert(1559 == result)
+
+
+def test_16b():
+    result = day16b.main()
+    assert(2191 == result)
+
+
+def test_17a():
+    result = day17a.main()
+    assert(3081 == result)
+
+
+def test_17b():
+    result = day17b.main()
+    assert(1524637681145 == result)
+
+
+def test_18a():
+    result = day18a.main()
+    assert(4314 == result)
+
+
+def test_18b():
+    result = day18b.main()
+    assert(2444 == result)
