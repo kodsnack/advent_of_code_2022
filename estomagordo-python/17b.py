@@ -88,6 +88,7 @@ def solve(lines):
     while (target-steps)%cyclen:
         solid, movepos, bottom = step(solid, shapenum, movepos, bottom)
         steps += 1
+        shapenum += 1
 
     return bottom + (target-steps)//cyclen * cycval
 
