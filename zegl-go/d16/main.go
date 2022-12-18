@@ -182,12 +182,10 @@ nextQ:
 				}
 				open := q.open
 				if you.newOpen != "" {
-					idx := openValveIdx[you.newOpen]
-					open |= 1 << idx
+					open |= 1 << openValveIdx[you.newOpen]
 				}
 				if ele.newOpen != "" {
-					idx := openValveIdx[ele.newOpen]
-					open |= 1 << idx
+					open |= 1 << openValveIdx[ele.newOpen]
 				}
 
 				// sort ats ===== speed
