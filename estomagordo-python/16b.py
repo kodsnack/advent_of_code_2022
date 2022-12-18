@@ -87,7 +87,6 @@ def solve(lines):
     highest = 0
     usefulcount = len(useful)
     order = sorted(range(1, usefulcount), key=lambda n: abs(n-usefulcount//2))
-    print(order)
 
     for n in order:
         for c in combinations(useful, n):
