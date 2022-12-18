@@ -194,3 +194,7 @@ def custsort(l, comparator):
             pb += 1
 
         return ll
+
+
+def adjacent(a, b):
+    return sum(abs(a[x]-b[x]) for x in range(len(a))) == 1

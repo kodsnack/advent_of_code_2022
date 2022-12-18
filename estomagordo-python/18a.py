@@ -2,27 +2,12 @@ from collections import Counter, defaultdict, deque
 from functools import cache, reduce
 from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
-from helpers import chunks, chunks_with_overlap, columns, custsort, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
+from helpers import adjacent, chunks, chunks_with_overlap, columns, custsort, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
 
 
 def solve(lines):
     droplets = [ints(line) for line in lines]
-
-    c = 0
-
-    for d in droplets:
-        x, y, z = d
-        c += 6
-        
-        for delta in (-1, 1):
-            for coord in range(3):
-                neigh = list(d)
-                neigh[coord] += delta
-
-                if neigh in droplets:
-                    c -= 1
-
-    return c
+    return 6 * len(droplets) - 2 * len([c for c in combinations(droplets, 2) if adjacent(c[0], c[1])])
 
 
 def main():

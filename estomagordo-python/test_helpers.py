@@ -1,4 +1,4 @@
-from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives, rays, rays_from_inside, custsort
+from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives, rays, rays_from_inside, custsort, adjacent
 
 
 def test_distance():
@@ -319,3 +319,33 @@ def test_custsort():
 
     assert([0, 1, 2, 5, 9] == resreg)
     assert([9, 5, 2, 1, 0] == resrev)
+
+
+def test_adjacent():
+    one_d_a = [4]
+    one_d_b = [5]
+    one_d_c = [10]
+
+    two_d_a = [4, 1]
+    two_d_b = [3, 1]
+    two_d_c = [4, 2]
+    two_d_d = [3, 0]
+
+    three_d_a = [1, 1, 1]
+    three_d_b = [1, 0, 1]
+    three_d_c = [1, 1, 3]
+    three_d_d = [0, 1, 0]
+
+    assert(not adjacent(one_d_a, one_d_a))
+    assert(adjacent(one_d_a, one_d_b))
+    assert(not adjacent(one_d_a, one_d_c))
+
+    assert(not adjacent(two_d_a, two_d_a))
+    assert(adjacent(two_d_a, two_d_b))
+    assert(adjacent(two_d_a, two_d_c))
+    assert(not adjacent(two_d_a, two_d_d))
+
+    assert(not adjacent(three_d_a, three_d_a))
+    assert(adjacent(three_d_a, three_d_b))
+    assert(not adjacent(three_d_a, three_d_c))
+    assert(not adjacent(three_d_a, three_d_d))
