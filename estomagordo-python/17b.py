@@ -57,34 +57,39 @@ def solve(lines):
 
         return solid, movepos, bottom
             
+    n = len(shapes)
     solid = {(0, x) for x in range(7)}
     bottom = 0
     shapenum = 0
     movepos = 0    
     cycledetectlen = 25000
     cyclegrowths = Counter()
-    lastcycle = 0
+    steps = 0
 
     for _ in range(cycledetectlen):
         solid, movepos, bottom = step(solid, shapenum, movepos, bottom)
+        steps += 1
         shapenum += 1
 
-        if shapenum % 5 == 0:
-            cyclegrowths[bottom-lastcycle] += 1
-            lastcycle = bottom
+        if shapenum % n == 0:
+            cyclegrowths[movepos%m] += 1
 
-    cyclen = 345*5
-    prev = n-cyclen
-    prevbot = 0
+    cyclen = n * len([k for k in cyclegrowths.keys() if cyclegrowths[k] > 1])
     target = 1000000000000
-    magic = 579710000
-    bottom = 0    
-    last = 0
-    
-    
-    cycval = bottom-prevbot
+    cycstart = bottom
 
-    return bottom + cycval * magic
+    for _ in range(cyclen):
+        solid, movepos, bottom = step(solid, shapenum, movepos, bottom)
+        steps += 1
+        shapenum += 1
+        
+    cycval = bottom-cycstart
+
+    while (target-steps)%cyclen:
+        solid, movepos, bottom = step(solid, shapenum, movepos, bottom)
+        steps += 1
+
+    return bottom + (target-steps)//cyclen * cycval
 
 
 def main():
