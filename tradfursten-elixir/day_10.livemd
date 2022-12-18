@@ -1,0 +1,75 @@
+# AoC 2022 - day 10
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    l =
+      input
+      |> String.split("\n", trim: true)
+      |> Enum.map(&parse/1)
+      |> process(1, 1, [1])
+      |> Enum.reverse()
+      |> Enum.with_index()
+      |> Enum.drop(19)
+      |> Enum.take_every(40)
+      # |> IO.inspect
+      |> Enum.map(fn {a, i} -> a * (i + 1) end)
+      # |> IO.inspect
+      |> Enum.sum()
+  end
+
+  def solve2(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.map(&parse/1)
+    |> process(1, 1, [1])
+    |> Enum.reverse()
+    |> Enum.with_index()
+    |> Enum.map(fn {x, i} ->
+      i = rem(i, 40)
+
+      case x in (i - 1)..(i + 1) do
+        true -> "#"
+        false -> "."
+      end
+    end)
+    |> Enum.chunk_every(40)
+    |> Enum.map(&Enum.join(&1, ""))
+    |> Enum.join("\n")
+  end
+
+  defp parse("noop"), do: {:noop}
+  defp parse("addx " <> rest), do: {:addx, String.to_integer(rest)}
+
+  defp process([], _x, _cycle, acc), do: acc
+
+  defp process([{:noop} | tail], x, cycle, acc) do
+    # IO.puts(":noop, #{cycle + 1} #{x}")
+    process(tail, x, cycle + 1, [x | acc])
+  end
+
+  defp process([{:addx, n} | tail], x, cycle, acc) do
+    # IO.puts(":addx, #{n} #{cycle + 1} #{x}")
+    # IO.puts(":addx, #{n} #{cycle + 2} #{x + n}")
+    process(tail, x + n, cycle + 2, [x + n | [x | acc]])
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2() |> IO.puts()
+```

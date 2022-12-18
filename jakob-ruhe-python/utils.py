@@ -11,6 +11,10 @@ DIRS = ("U", "L", "D", "R")
 Point = namedtuple("Point", ["x", "y"])
 
 
+def find_neighbors(center):
+    return [Point(center.x + dir_x(d), center.y + dir_y(d)) for d in range(4)]
+
+
 def dir_from_name(name):
     return DIRS.index(name)
 
