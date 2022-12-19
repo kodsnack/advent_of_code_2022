@@ -3,7 +3,6 @@ from functools import reduce
 from heapq import heapify, heappop, heappush
 from itertools import combinations, permutations, product
 from helpers import adjacent, chunks, chunks_with_overlap, columns, custsort, digits, distance, distance_sq, eight_neighs, eight_neighs_bounded, grouped_lines, ints, manhattan, multall, n_neighs, neighs, neighs_bounded, positives, rays, rays_from_inside
-from time import time as ti
 
 def solve(lines):
     blueprints = [ints(line) for line in lines]
