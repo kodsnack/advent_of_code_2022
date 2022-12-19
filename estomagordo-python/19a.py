@@ -49,7 +49,8 @@ def solve(lines):
         # seen = {(0, 1, 0, 0, 0)}
         starth = heuristic(state)
         state = tuple([-starth] + list(state))
-        frontier = [encode(state)]
+        # frontier = [encode(state)]
+        frontier = [state]
         taken = 0
         latest = time
         best = 0
@@ -57,7 +58,8 @@ def solve(lines):
 
         while frontier:
             taken += 1
-            negh, t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot = decode(heappop(frontier))
+            # negh, t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot = decode(heappop(frontier))
+            negh, t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot = heappop(frontier)
             latest = min(latest, t)
 
             if taken % 10**7 == 0:
@@ -108,7 +110,8 @@ def solve(lines):
 
                 mstate = tuple([-h] + move)
 
-                heappush(frontier, encode(mstate))
+                # heappush(frontier, encode(mstate))
+                heappush(frontier, mstate)
 
         return best
 
