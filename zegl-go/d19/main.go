@@ -17,9 +17,7 @@ func main() {
 
 	var sum int
 	for k, row := range strings.Split(input, "\n") {
-		p := play(row, 24, 1_000_000)
-		fmt.Println(p)
-		sum += (k + 1) * p
+		sum += (k + 1) * play(row, 24, 5_000_000)
 	}
 	fmt.Println("part1", sum)
 
@@ -32,7 +30,6 @@ func main() {
 }
 
 func play(row string, playMinutes, pruneTop int) int {
-
 	nums := intsInString(row)
 
 	type qi struct {
@@ -49,7 +46,7 @@ func play(row string, playMinutes, pruneTop int) int {
 	}
 
 	val := func(q qi) int {
-		return q.ore + q.clay*10 + q.obsidian*100 + q.geode*1000
+		return q.oreRobot + q.clayRobot*10 + q.obsidianRobot*100 + q.geodeRobot*1000
 	}
 
 	oreRobotOreCost := nums[1]
@@ -71,10 +68,7 @@ func play(row string, playMinutes, pruneTop int) int {
 			maxmin = Q[0].minute
 			seen = make(map[qi]bool) // reset
 
-			if len(Q) > pruneTop && maxmin > 24 {
-
-				fmt.Println(maxmin, len(Q))
-				// prune
+			if len(Q) > pruneTop {
 				sort.Slice(Q, func(i, j int) bool {
 					return val(Q[i]) > val(Q[j])
 				})
