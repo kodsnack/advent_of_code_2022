@@ -7,7 +7,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"time"
 )
 
 //go:embed input.txt
@@ -17,167 +16,163 @@ func main() {
 	input = strings.TrimSpace(input)
 
 	var sum int
-	var prod int = 1
-
 	for k, row := range strings.Split(input, "\n") {
+		p := play(row, 24, 1_000_000)
+		fmt.Println(p)
+		sum += (k + 1) * p
+	}
+	fmt.Println("part1", sum)
 
-		if k == 3 {
-			break
-		}
+	var prod int = 1
+	for _, row := range strings.Split(input, "\n")[:3] {
+		prod *= play(row, 32, 5_000_000)
+	}
 
-		nums := intsInString(row)
-		fmt.Println(nums)
+	fmt.Println("part2", prod)
+}
 
-		type qi struct {
-			minute   int
-			ore      int
-			clay     int
-			obsidian int
-			geode    int
+func play(row string, playMinutes, pruneTop int) int {
 
-			oreRobot      int
-			clayRobot     int
-			obsidianRobot int
-			geodeRobot    int
-		}
+	nums := intsInString(row)
 
-		val := func(q qi) int {
-			return q.ore + q.clay*10 + q.obsidian*100 + q.geode*10000
-		}
+	type qi struct {
+		minute   int
+		ore      int
+		clay     int
+		obsidian int
+		geode    int
 
-		blueprint := nums[0]
-		oreRobotOreCost := nums[1]
-		clayRobotOreCost := nums[2]
-		obsidianRobotOreCost := nums[3]
-		obsidianRobotClayCost := nums[4]
-		geodeRobotOreCost := nums[5]
-		geodeRobotObsidianCost := nums[6]
+		oreRobot      int
+		clayRobot     int
+		obsidianRobot int
+		geodeRobot    int
+	}
 
-		var maxgeodes int
-		var maxmin int
+	val := func(q qi) int {
+		return q.ore + q.clay*10 + q.obsidian*100 + q.geode*1000
+	}
 
-		seen := make(map[qi]bool)
+	oreRobotOreCost := nums[1]
+	clayRobotOreCost := nums[2]
+	obsidianRobotOreCost := nums[3]
+	obsidianRobotClayCost := nums[4]
+	geodeRobotOreCost := nums[5]
+	geodeRobotObsidianCost := nums[6]
 
-		Q := []qi{{oreRobot: 1}}
-		t0 := time.Now()
-		for len(Q) > 0 {
+	var maxgeodes int
+	var maxmin int
 
-			if Q[0].minute > maxmin {
-				maxmin = Q[0].minute
+	seen := make(map[qi]bool)
 
+	Q := []qi{{oreRobot: 1}}
+	for len(Q) > 0 {
+
+		if Q[0].minute > maxmin {
+			maxmin = Q[0].minute
+			seen = make(map[qi]bool) // reset
+
+			if len(Q) > pruneTop && maxmin > 24 {
+
+				fmt.Println(maxmin, len(Q))
 				// prune
 				sort.Slice(Q, func(i, j int) bool {
 					return val(Q[i]) > val(Q[j])
 				})
-
-				if len(Q) > 5_000_000 {
-					Q = Q[0:5_000_000]
-					continue
-				}
-			}
-
-			q := Q[0]
-			Q = Q[1:]
-
-			if q.minute == 32 {
-				if q.geode > maxgeodes {
-					maxgeodes = q.geode
-				}
+				Q = Q[0:pruneTop]
 				continue
 			}
 
-			if seen[q] {
-				continue
+		}
+
+		q := Q[0]
+		Q = Q[1:]
+
+		if q.minute == playMinutes {
+			if q.geode > maxgeodes {
+				maxgeodes = q.geode
 			}
-			seen[q] = true
+			continue
+		}
 
-			var buys int
+		if seen[q] {
+			continue
+		}
+		seen[q] = true
 
-			if q.ore >= geodeRobotOreCost && q.obsidian >= geodeRobotObsidianCost {
-				Q = append(Q, qi{
-					minute:   q.minute + 1,
-					ore:      q.ore + q.oreRobot - geodeRobotOreCost,
-					clay:     q.clay + q.clayRobot,
-					obsidian: q.obsidian + q.obsidianRobot - geodeRobotObsidianCost,
-					geode:    q.geode + q.geodeRobot,
-
-					oreRobot:      q.oreRobot,
-					clayRobot:     q.clayRobot,
-					obsidianRobot: q.obsidianRobot,
-					geodeRobot:    q.geodeRobot + 1,
-				})
-				buys++
-			}
-
-			if q.ore >= obsidianRobotOreCost && q.clay >= obsidianRobotClayCost {
-				Q = append(Q, qi{
-					minute:   q.minute + 1,
-					ore:      q.ore + q.oreRobot - obsidianRobotOreCost,
-					clay:     q.clay + q.clayRobot - obsidianRobotClayCost,
-					obsidian: q.obsidian + q.obsidianRobot,
-					geode:    q.geode + q.geodeRobot,
-
-					oreRobot:      q.oreRobot,
-					clayRobot:     q.clayRobot,
-					obsidianRobot: q.obsidianRobot + 1,
-					geodeRobot:    q.geodeRobot,
-				})
-				buys++
-			}
-
-			if q.ore >= clayRobotOreCost {
-				Q = append(Q, qi{
-					minute:   q.minute + 1,
-					ore:      q.ore + q.oreRobot - clayRobotOreCost,
-					clay:     q.clay + q.clayRobot,
-					obsidian: q.obsidian + q.obsidianRobot,
-					geode:    q.geode + q.geodeRobot,
-
-					oreRobot:      q.oreRobot,
-					clayRobot:     q.clayRobot + 1,
-					obsidianRobot: q.obsidianRobot,
-					geodeRobot:    q.geodeRobot,
-				})
-				buys++
-			}
-
-			if q.ore >= oreRobotOreCost {
-				Q = append(Q, qi{
-					minute:   q.minute + 1,
-					ore:      q.ore + q.oreRobot - oreRobotOreCost,
-					clay:     q.clay + q.clayRobot,
-					obsidian: q.obsidian + q.obsidianRobot,
-					geode:    q.geode + q.geodeRobot,
-
-					oreRobot:      q.oreRobot + 1,
-					clayRobot:     q.clayRobot,
-					obsidianRobot: q.obsidianRobot,
-					geodeRobot:    q.geodeRobot,
-				})
-				buys++
-			}
-
+		if q.ore >= geodeRobotOreCost && q.obsidian >= geodeRobotObsidianCost {
 			Q = append(Q, qi{
-				minute:        q.minute + 1,
-				ore:           q.ore + q.oreRobot,
-				clay:          q.clay + q.clayRobot,
-				obsidian:      q.obsidian + q.obsidianRobot,
-				geode:         q.geode + q.geodeRobot,
+				minute:   q.minute + 1,
+				ore:      q.ore + q.oreRobot - geodeRobotOreCost,
+				clay:     q.clay + q.clayRobot,
+				obsidian: q.obsidian + q.obsidianRobot - geodeRobotObsidianCost,
+				geode:    q.geode + q.geodeRobot,
+
 				oreRobot:      q.oreRobot,
+				clayRobot:     q.clayRobot,
+				obsidianRobot: q.obsidianRobot,
+				geodeRobot:    q.geodeRobot + 1,
+			})
+		}
+
+		if q.ore >= obsidianRobotOreCost && q.clay >= obsidianRobotClayCost {
+			Q = append(Q, qi{
+				minute:   q.minute + 1,
+				ore:      q.ore + q.oreRobot - obsidianRobotOreCost,
+				clay:     q.clay + q.clayRobot - obsidianRobotClayCost,
+				obsidian: q.obsidian + q.obsidianRobot,
+				geode:    q.geode + q.geodeRobot,
+
+				oreRobot:      q.oreRobot,
+				clayRobot:     q.clayRobot,
+				obsidianRobot: q.obsidianRobot + 1,
+				geodeRobot:    q.geodeRobot,
+			})
+		}
+
+		if q.ore >= clayRobotOreCost {
+			Q = append(Q, qi{
+				minute:   q.minute + 1,
+				ore:      q.ore + q.oreRobot - clayRobotOreCost,
+				clay:     q.clay + q.clayRobot,
+				obsidian: q.obsidian + q.obsidianRobot,
+				geode:    q.geode + q.geodeRobot,
+
+				oreRobot:      q.oreRobot,
+				clayRobot:     q.clayRobot + 1,
+				obsidianRobot: q.obsidianRobot,
+				geodeRobot:    q.geodeRobot,
+			})
+		}
+
+		if q.ore >= oreRobotOreCost {
+			Q = append(Q, qi{
+				minute:   q.minute + 1,
+				ore:      q.ore + q.oreRobot - oreRobotOreCost,
+				clay:     q.clay + q.clayRobot,
+				obsidian: q.obsidian + q.obsidianRobot,
+				geode:    q.geode + q.geodeRobot,
+
+				oreRobot:      q.oreRobot + 1,
 				clayRobot:     q.clayRobot,
 				obsidianRobot: q.obsidianRobot,
 				geodeRobot:    q.geodeRobot,
 			})
 		}
 
-		fmt.Println("blueprint", blueprint, "geodes", maxgeodes, time.Since(t0))
-
-		sum += blueprint * maxgeodes
-		prod *= maxgeodes
+		Q = append(Q, qi{
+			minute:        q.minute + 1,
+			ore:           q.ore + q.oreRobot,
+			clay:          q.clay + q.clayRobot,
+			obsidian:      q.obsidian + q.obsidianRobot,
+			geode:         q.geode + q.geodeRobot,
+			oreRobot:      q.oreRobot,
+			clayRobot:     q.clayRobot,
+			obsidianRobot: q.obsidianRobot,
+			geodeRobot:    q.geodeRobot,
+		})
 	}
 
-	fmt.Println(sum)
-	fmt.Println(prod)
+	return maxgeodes
 }
 
 func intsInString(s string) []int {
