@@ -100,7 +100,6 @@ class Grid {
   }
 
   Pos? getPosOfBeacon(int maxCoord) {
-    int count = 0;
     Pos? pos;
     for (int y = 0; y < maxCoord; y++) {
       CoveredRange coveredRange = getCoveredRangeOnLine(y);
@@ -112,7 +111,6 @@ class Grid {
       if (searchRange.rangeList.isNotEmpty) {
         int len = searchRange.rangeList.length;
         if (len != 1) print('!!!!');
-        count++;
         pos = Pos(searchRange.rangeList.first.start, y);
       }
     }

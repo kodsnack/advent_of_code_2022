@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../util/pos.dart';
 import '../util/range.dart';
 import '../util/util.dart';
