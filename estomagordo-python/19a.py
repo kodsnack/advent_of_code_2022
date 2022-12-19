@@ -46,6 +46,55 @@ def solve(lines):
             return state
 
         state = (time, 0, 0, 0, 0, 1, 0, 0, 0)
+        frontier = [state]
+        seen = set()
+        best = 0
+        # latest = time
+        # tt = ti()
+
+        for t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot in frontier:
+            # if t < latest:
+            #     latest = t
+            #     print(latest, len(frontier), len(seen), ti()-tt)
+            #     tt = ti()
+
+            if t == 0:
+                best = max(best, geo)
+                continue
+
+            moves = [[t-1, ore+orebot, clay+claybot, obs+obsbot, geo+geobot, orebot, claybot, obsbot, geobot]]
+
+            if ore >= blueprint[4] and obs >= blueprint[5]:
+                moves.append([t-1, ore+orebot-blueprint[4], clay+claybot, obs+obsbot-blueprint[5], geo+geobot, orebot, claybot, obsbot, geobot+1])
+                # moves.append([t-1, ore+orebot-blueprint[4], clay+claybot, obs+obsbot-blueprint[5], geo+geobot, orebot, claybot, obsbot, geobot+1])
+            if ore >= blueprint[2] and clay >= blueprint[3]:
+                # moves = [[t-1, ore+orebot-blueprint[2], clay+claybot-blueprint[3], obs+obsbot, geo+geobot, orebot, claybot, obsbot+1, geobot]]
+                moves.append([t-1, ore+orebot-blueprint[2], clay+claybot-blueprint[3], obs+obsbot, geo+geobot, orebot, claybot, obsbot+1, geobot])
+            if ore >= blueprint[1] and t > 2:
+                moves.append([t-1, ore+orebot-blueprint[1], clay+claybot, obs+obsbot, geo+geobot, orebot, claybot+1, obsbot, geobot])
+            if ore >= blueprint[0] and t > 1:
+                moves.append([t-1, ore+orebot-blueprint[0], clay+claybot, obs+obsbot, geo+geobot, orebot+1, claybot, obsbot, geobot])
+
+            if len(moves) == 5:
+                moves = moves[1:]
+
+            for move in moves:
+                tup = tuple(move[1:])
+
+                if tup in seen:
+                    continue
+
+                seen.add(tup)
+                frontier.append(move)
+                # h = heuristic(move)
+
+                # mstate = tuple([-h] + move)
+
+                # heappush(frontier, encode(mstate))
+                # heappush(frontier, mstate)
+
+        return best
+
         # seen = {(0, 1, 0, 0, 0)}
         starth = heuristic(state)
         state = tuple([-starth] + list(state))
@@ -120,9 +169,9 @@ def solve(lines):
     for b in blueprints:
         tt = ti()
         sc = score(b[1:])
-        print(b[0], sc, ti()-tt)
-        tt = ti()
         s += b[0] * sc
+        print(b[0], sc, s, ti()-tt)
+        tt = ti()
 
     return s
 
@@ -141,3 +190,4 @@ if __name__ == '__main__':
     print(main())
 
 # 2181 too high
+# 787 too low
