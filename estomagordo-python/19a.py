@@ -12,14 +12,29 @@ def solve(lines):
     # blueprints = [[1, 4, 2, 3, 14, 2, 7], [2, 2, 3, 3, 8, 3, 12]]
 
     def score(blueprint, time=24):
+        def triang(n):
+            if n < 1:
+                return 0
+
+            return (n + n*n)//2
+
+        def heuristic(state):
+            time = state[0]
+            geo = state[4]
+            geobot = state[8]
+
+            return geo + time * geobot + triang(time-1)
+
         state = (time, 0, 0, 0, 0, 1, 0, 0, 0)
-        frontier = [state]
+        frontier = [(heuristic(state), time, state)]
         seen = {}
         best = 0
         # latest = time
         # tt = ti()
 
-        for t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot in frontier:
+        while frontier:
+            negh, t, state = heappop(frontier)
+            t, ore, clay, obs, geo, orebot, claybot, obsbot, geobot = state
             # if t < latest:
             #     latest = t
             #     print(latest, len(frontier), len(seen), ti()-tt)
@@ -32,7 +47,7 @@ def solve(lines):
             moves = [[t-1, ore+orebot, clay+claybot, obs+obsbot, geo+geobot, orebot, claybot, obsbot, geobot]]
 
             if ore >= blueprint[4] and obs >= blueprint[5]:
-                moves.append([t-1, ore+orebot-blueprint[4], clay+claybot, obs+obsbot-blueprint[5], geo+geobot, orebot, claybot, obsbot, geobot+1])
+                moves = [[t-1, ore+orebot-blueprint[4], clay+claybot, obs+obsbot-blueprint[5], geo+geobot, orebot, claybot, obsbot, geobot+1]]
             else:
                 if ore >= blueprint[2] and clay >= blueprint[3]:
                     moves.append([t-1, ore+orebot-blueprint[2], clay+claybot-blueprint[3], obs+obsbot, geo+geobot, orebot, claybot, obsbot+1, geobot])
@@ -40,7 +55,7 @@ def solve(lines):
                     moves.append([t-1, ore+orebot-blueprint[1], clay+claybot, obs+obsbot, geo+geobot, orebot, claybot+1, obsbot, geobot])
                 if ore >= blueprint[0] and t > 1:
                     moves.append([t-1, ore+orebot-blueprint[0], clay+claybot, obs+obsbot, geo+geobot, orebot+1, claybot, obsbot, geobot])
-                    
+
             for move in moves:
                 tup = tuple(move[2:])
 
@@ -48,7 +63,9 @@ def solve(lines):
                     continue
 
                 seen[tup] = move[1]
-                frontier.append(move)
+                h = heuristic(move)
+
+                heappush(frontier, (-h, t-1, move))
 
         return best
 
