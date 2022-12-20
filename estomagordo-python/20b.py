@@ -46,32 +46,6 @@ def solve(lines):
 
             if steps == 0:
                 continue
-            if steps == 1:
-                next = node.next
-                nextnext = node.next.next
-                prev = node.prev
-
-                node.next = nextnext
-                node.prev = next
-                next.next = node
-                next.prev = prev
-                nextnext.prev = node
-                prev.next = next
-
-                continue
-            if steps == len(nodes) - 1:
-                next = node.next
-                prev = node.prev
-                prevprev = node.prev.prev
-
-                node.next = prev
-                node.prev = prevprev
-                next.prev = prev
-                prev.next = next
-                prev.prev = node
-                prevprev.next = node
-                
-                continue
             
             for x in range(steps):
                 moving = moving.next
