@@ -16,7 +16,7 @@ def solve(lines):
     first = None
     back = None
     nodes = []
-    key = 1#811589153
+    key = 811589153
 
     for line in lines:
         val = int(line) * key
@@ -44,11 +44,10 @@ def solve(lines):
                     vals.append(moving.val)
                 print(vals)
 
-    for i in range(1):
+    for i in range(10):
         print(i)
         for node in nodes:
-            steps = abs(node.val) % len(nodes)
-            forward = node.val > 0
+            steps = node.val % (len(nodes) - 1)
             moving = node
             # printstartwith(1)
 
@@ -58,37 +57,34 @@ def solve(lines):
                 next = node.next
                 nextnext = node.next.next
                 prev = node.prev
+
+                node.next = nextnext
+                node.prev = next
+                next.next = node
+                next.prev = prev
+                nextnext.prev = node
+                prev.next = next
+
+                continue
+            if steps == len(nodes) - 1:
+                next = node.next
+                prev = node.prev
                 prevprev = node.prev.prev
 
-                if forward:
-                    node.next = nextnext
-                    node.prev = next
-                    next.next = node
-                    next.prev = prev
-                    nextnext.prev = node
-                    prev.next = next
-                else:
-                    node.next = prev
-                    node.prev = prevprev
-                    next.prev = prev
-                    prev.next = next
-                    prev.prev = node
-                    prevprev.next = node
-
+                node.next = prev
+                node.prev = prevprev
+                next.prev = prev
+                prev.next = next
+                prev.prev = node
+                prevprev.next = node
+                
                 continue
             
             for x in range(steps):
-                if forward:
-                    moving = moving.next
-                else:
-                    moving = moving.prev
+                moving = moving.next
 
-            if forward:
-                endprev = moving
-                endnext = moving.next
-            else:
-                endprev = moving.prev
-                endnext = moving
+            endprev = moving
+            endnext = moving.next
             
             startprev = node.prev
             startnext = node.next
