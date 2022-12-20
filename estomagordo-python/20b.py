@@ -16,7 +16,7 @@ def solve(lines):
     first = None
     back = None
     nodes = []
-    key = 811589153
+    key = 1#811589153
 
     for line in lines:
         val = int(line) * key
@@ -44,19 +44,17 @@ def solve(lines):
                     vals.append(moving.val)
                 print(vals)
 
-    for i in range(10):
+    for i in range(1):
         print(i)
         for node in nodes:
             steps = abs(node.val) % len(nodes)
             forward = node.val > 0
-            startprev = node.prev
-            startnext = node.next
             moving = node
-            printstartwith(1)
+            # printstartwith(1)
 
-            if steps % len(nodes) == 0:
+            if steps == 0:
                 continue
-            if steps % len(nodes) == 1:
+            if steps == 1:
                 next = node.next
                 nextnext = node.next.next
                 prev = node.prev
@@ -91,7 +89,9 @@ def solve(lines):
             else:
                 endprev = moving.prev
                 endnext = moving
-
+            
+            startprev = node.prev
+            startnext = node.next
             startprev.next = startnext
             startnext.prev = startprev
             endprev.next = node
@@ -100,20 +100,22 @@ def solve(lines):
             node.next = endnext
         
     s = 0
-    printstartwith(0)
+    # printstartwith(0)
+    loopvals = set()
     
     for node in nodes:
         if node.val == 0:
             moving = node
 
             for x in range(3000):
+                loopvals.add(moving.val)
                 moving = moving.next
 
                 if x % 1000 == 999:
                     s += moving.val
                     print(x, moving.val)
 
-
+    print(len(loopvals))
     return s
                 
 
