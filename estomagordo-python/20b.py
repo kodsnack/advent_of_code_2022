@@ -16,7 +16,7 @@ def solve(lines):
     first = None
     back = None
     nodes = []
-    key = 1#811589153
+    key = 811589153
 
     for line in lines:
         val = int(line) * key
@@ -44,15 +44,19 @@ def solve(lines):
                     vals.append(moving.val)
                 print(vals)
 
-    for i in range(1):
+    for i in range(10):
         print(i)
         for node in nodes:
-            steps = abs(node.val) + len(nodes) #% len(nodes)
+            steps = abs(node.val) % len(nodes)
             forward = node.val > 0
-            print(0)
+            startprev = node.prev
+            startnext = node.next
+            moving = node
             printstartwith(1)
-            
-            for x in range(steps):
+
+            if steps % len(nodes) == 0:
+                continue
+            if steps % len(nodes) == 1:
                 next = node.next
                 nextnext = node.next.next
                 prev = node.prev
@@ -73,38 +77,30 @@ def solve(lines):
                     prev.prev = node
                     prevprev.next = node
 
-                print(x+1)
-                printstartwith(1)
+                continue
+            
+            for x in range(steps):
+                if forward:
+                    moving = moving.next
+                else:
+                    moving = moving.prev
 
-            # for _ in range(steps-1):
-            #     if forward:
-            #         node = node.next
-            #     else:
-            #         node = node.prev
+            if forward:
+                endprev = moving
+                endnext = moving.next
+            else:
+                endprev = moving.prev
+                endnext = moving
 
-            #     next = node.next
-            #     nextnext = node.next.next
-            #     prev = node.prev
-            #     prevprev = node.prev.prev
-
-            #     if forward:
-            #         node.next = nextnext
-            #         node.prev = next
-            #         next.next = node
-            #         next.prev = prev
-            #         nextnext.prev = node
-            #         prev.next = next
-            #     else:
-            #         node.next = prev
-            #         node.prev = prevprev
-            #         next.prev = prev
-            #         prev.next = next
-            #         prev.prev = node
-            #         prevprev.next = node
-
-        # printstartwith(0)
+            startprev.next = startnext
+            startnext.prev = startprev
+            endprev.next = node
+            endnext.prev = node
+            node.prev = endprev
+            node.next = endnext
         
     s = 0
+    printstartwith(0)
     
     for node in nodes:
         if node.val == 0:
