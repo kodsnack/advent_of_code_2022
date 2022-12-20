@@ -232,9 +232,9 @@ def test_19b():
 
 def test_20a():
     result = day20a.main()
-    assert(960 == result)
+    assert(16533 == result)
 
 
 def test_20b():
     result = day20b.main()
-    assert(2040 == result)
+    assert(4789999181006 == result)
