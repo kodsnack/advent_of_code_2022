@@ -60,7 +60,6 @@ def solve(lines):
                 next.prev = prev
                 nextnext.prev = node
                 prev.next = next
-                # node.prev.next, node.next, node.next.next, node.prev, node.next.prev, node.next.next.prev = node.next, node.next.next, node, node.next, node.prev, node
             else:
                 node.next = prev
                 node.prev = prevprev
@@ -68,7 +67,6 @@ def solve(lines):
                 prev.next = next
                 prev.prev = node
                 prevprev.next = node
-                # node.next, node.prev.next, node.prev.prev.next, node.prev, node.prev.prev, node.next.prev = node.prev, node.next, node, node.prev.prev, node, node.prev
 
         # printstartwith(1)
         

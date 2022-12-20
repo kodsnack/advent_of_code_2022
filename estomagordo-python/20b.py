@@ -16,7 +16,7 @@ def solve(lines):
     first = None
     back = None
     nodes = []
-    key = 811589153
+    key = 1#811589153
 
     for line in lines:
         val = int(line) * key
@@ -44,18 +44,15 @@ def solve(lines):
                     vals.append(moving.val)
                 print(vals)
 
-    for i in range(10):
+    for i in range(1):
         print(i)
         for node in nodes:
-            steps = abs(node.val) % len(nodes)
+            steps = abs(node.val) + len(nodes) #% len(nodes)
             forward = node.val > 0
+            print(0)
+            printstartwith(1)
             
-            for _ in range(steps-1):
-                if forward:
-                    node = node.next
-                else:
-                    node = node.prev
-
+            for x in range(steps):
                 next = node.next
                 nextnext = node.next.next
                 prev = node.prev
@@ -76,7 +73,36 @@ def solve(lines):
                     prev.prev = node
                     prevprev.next = node
 
-        printstartwith(0)
+                print(x+1)
+                printstartwith(1)
+
+            # for _ in range(steps-1):
+            #     if forward:
+            #         node = node.next
+            #     else:
+            #         node = node.prev
+
+            #     next = node.next
+            #     nextnext = node.next.next
+            #     prev = node.prev
+            #     prevprev = node.prev.prev
+
+            #     if forward:
+            #         node.next = nextnext
+            #         node.prev = next
+            #         next.next = node
+            #         next.prev = prev
+            #         nextnext.prev = node
+            #         prev.next = next
+            #     else:
+            #         node.next = prev
+            #         node.prev = prevprev
+            #         next.prev = prev
+            #         prev.next = next
+            #         prev.prev = node
+            #         prevprev.next = node
+
+        # printstartwith(0)
         
     s = 0
     
