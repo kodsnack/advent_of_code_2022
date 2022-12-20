@@ -15,12 +15,16 @@ class Node:
 def solve(lines):
     first = None
     back = None
+    zero = None
     nodes = []
     key = 811589153
 
     for line in lines:
         val = int(line) * key
         node = Node(val)
+
+        if val == 0:
+            zero = node
 
         if back:
             back.next = node
@@ -34,22 +38,11 @@ def solve(lines):
     first.prev = node
     node.next = first
 
-    def printstartwith(n):
-        for node in nodes:
-            if node.val == n:
-                vals = [node.val]
-                moving = node
-                for _ in range(len(nodes)-1):
-                    moving = moving.next
-                    vals.append(moving.val)
-                print(vals)
-
     for i in range(10):
         print(i)
         for node in nodes:
             steps = node.val % (len(nodes) - 1)
             moving = node
-            # printstartwith(1)
 
             if steps == 0:
                 continue
@@ -96,24 +89,15 @@ def solve(lines):
             node.next = endnext
         
     s = 0
-    # printstartwith(0)
-    loopvals = set()
-    
-    for node in nodes:
-        if node.val == 0:
-            moving = node
+    moving = zero
 
-            for x in range(3000):
-                loopvals.add(moving.val)
-                moving = moving.next
+    for x in range(3000):
+        moving = moving.next
 
-                if x % 1000 == 999:
-                    s += moving.val
-                    print(x, moving.val)
-
-    print(len(loopvals))
-    return s
-                
+        if x % 1000 == 999:
+            s += moving.val
+                    
+    return s                
 
 
 def main():
