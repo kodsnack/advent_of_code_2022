@@ -132,3 +132,69 @@ def chunks(l, n):
 def chunks_with_overlap(l, n):
     for x in range(n, len(l)+1):
         yield(l[x-n:x])
+
+
+def positives(line):
+    pattern = re.compile(r'\d+')
+
+    return [int(val) for val in re.findall(pattern, line) if val]
+
+
+def rays(grid, y, x):
+    return [
+     [grid[y][dx] for dx in range(x)],
+     [grid[y][dx] for dx in range(x+1, len(grid[0]))],
+     [grid[dy][x] for dy in range(y)],
+     [grid[dy][x] for dy in range(y+1, len(grid))]
+    ]
+
+
+def rays_from_inside(grid, y, x):
+    return [
+     [grid[y][dx] for dx in range(x)][::-1],
+     [grid[y][dx] for dx in range(x+1, len(grid[0]))],
+     [grid[dy][x] for dy in range(y)][::-1],
+     [grid[dy][x] for dy in range(y+1, len(grid))]
+    ]
+
+
+def custsort(l, comparator):
+        n = len(l)
+
+        if n < 2:
+            return l
+
+        a = l[:n//2]
+        b = l[n//2:]
+
+        ll = []
+
+        la = len(a)
+        lb = len(b)
+        pa = 0
+        pb = 0
+        sa = custsort(a, comparator)
+        sb = custsort(b, comparator)
+
+        while pa < la and pb < lb:
+            comp = comparator(sa[pa], sb[pb])
+
+            if comp > 0:
+                ll.append(sb[pb])
+                pb += 1
+            else:
+                ll.append(sa[pa])
+                pa += 1
+
+        while pa < la:
+            ll.append(sa[pa])
+            pa += 1
+        while pb < lb:
+            ll.append(sb[pb])
+            pb += 1
+
+        return ll
+
+
+def adjacent(a, b):
+    return sum(abs(a[x]-b[x]) for x in range(len(a))) == 1

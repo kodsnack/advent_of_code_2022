@@ -1,0 +1,51 @@
+# AoC 2022 - day 06
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> find_message_start(0, 4)
+  end
+
+  def solve2(input) do
+    input
+    |> find_message_start(0, 14)
+  end
+
+  defp find_message_start("", pos, _), do: pos
+
+  defp find_message_start(<<a::size(8), rest::binary>>, pos, target) do
+    case parse_start(MapSet.new([a]), rest, target) do
+      true -> pos + target
+      false -> find_message_start(rest, pos + 1, target)
+    end
+  end
+
+  defp parse_start(_, _, 1), do: true
+
+  defp parse_start(set, <<b::size(8), rest::binary>>, target) do
+    case MapSet.member?(set, b) do
+      true -> false
+      false -> parse_start(MapSet.put(set, b), rest, target - 1)
+    end
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
