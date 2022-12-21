@@ -3,6 +3,7 @@ package main
 import (
 	_ "embed"
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -20,71 +21,48 @@ func main() {
 		words[parts[0]] = parts[1]
 	}
 
-	fmt.Println(part1(words))
-	fmt.Println(part2(words))
-}
-
-func part1(words map[string]string) int {
-	var solve func(str string) int
-	solve = func(str string) int {
+	var solve func(str string) float64
+	solve = func(str string) float64 {
 		w := words[str]
-		if strings.Contains(w, "+") {
-			parts := strings.Split(w, " + ")
-			return solve(parts[0]) + solve(parts[1])
+		p := strings.Split(w, " ")
+		if len(p) == 1 {
+			r, _ := strconv.Atoi(w)
+			return float64(r)
 		}
-		if strings.Contains(w, "-") {
-			parts := strings.Split(w, " - ")
-			return solve(parts[0]) - solve(parts[1])
+		switch p[1] {
+		case "+":
+			return solve(p[0]) + solve(p[2])
+		case "-":
+			return solve(p[0]) - solve(p[2])
+		case "*":
+			return solve(p[0]) * solve(p[2])
+		case "/":
+			return solve(p[0]) / solve(p[2])
+		default:
+			panic("unknown operator")
 		}
-		if strings.Contains(w, "*") {
-			parts := strings.Split(w, " * ")
-			return solve(parts[0]) * solve(parts[1])
-		}
-		if strings.Contains(w, "/") {
-			parts := strings.Split(w, " / ")
-			return solve(parts[0]) / solve(parts[1])
-		}
-		r, _ := strconv.Atoi(w)
-		return r
 	}
 
-	return solve("root")
-}
+	fmt.Println(int64(solve("root")))
 
-func part2(words map[string]string) int {
+	var min = 0
+	var max = math.MaxInt64
 
-	var solve func(str string, n int) int
-	solve = func(str string, n int) int {
-		if str == "humn" {
-			return n
-		}
-		w := words[str]
-		if strings.Contains(w, "+") {
-			parts := strings.Split(w, " + ")
-			return solve(parts[0], n) + solve(parts[1], n)
-		}
-		if strings.Contains(w, "-") {
-			parts := strings.Split(w, " - ")
-			return solve(parts[0], n) - solve(parts[1], n)
-		}
-		if strings.Contains(w, "*") {
-			parts := strings.Split(w, " * ")
-			return solve(parts[0], n) * solve(parts[1], n)
-		}
-		if strings.Contains(w, "/") {
-			parts := strings.Split(w, " / ")
-			return solve(parts[0], n) / solve(parts[1], n)
-		}
-		r, _ := strconv.Atoi(w)
-		return r
-	}
+	lr := strings.Split(words["root"], " ")
 
-	b := solve("tjtt", 0)
-	// lol manual bisection
-	for n := 3330805240000; ; n += 1 {
-		a := solve("bjgs", n)
-		if a == b {
-			return n
+	for min < max {
+		mid := (min + max) / 2
+		words["humn"] = fmt.Sprintf("%d", mid)
+		a := solve(lr[0])
+		b := solve(lr[2])
+		if int(a) == int(b) {
+			fmt.Println(mid)
+			return
+		}
+		if a > b {
+			min = mid + 1
+		} else {
+			max = mid
 		}
 	}
 }
