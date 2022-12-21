@@ -1,0 +1,169 @@
+# AoC 2022 - day 11
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Monkey do
+  defstruct id: nil, items: [], op: nil, divider: 1, true: nil, false: nil, inspected: 0
+end
+
+defmodule Day01 do
+  def solve1(input) do
+    monkeys =
+      input
+      |> String.split("\n")
+      |> Enum.chunk_by(&(&1 != ""))
+      |> Enum.filter(&(&1 != [""]))
+      |> Enum.map(&parse_monkey(&1, %Monkey{}))
+      |> Enum.reduce(%{}, fn monkey, acc ->
+        Map.put(acc, monkey.id, monkey)
+      end)
+
+    1..20
+    |> Enum.reduce(monkeys, fn _round, acc -> play_round(acc, 0, 3) end)
+    |> Map.to_list()
+    |> Enum.map(fn {_k, v} -> v.inspected end)
+    |> Enum.sort(fn a, b -> a > b end)
+    |> Enum.take(2)
+    |> Enum.product()
+  end
+
+  def solve2(input) do
+    monkeys =
+      input
+      |> String.split("\n")
+      |> Enum.chunk_by(&(&1 != ""))
+      |> Enum.filter(&(&1 != [""]))
+      |> Enum.map(&parse_monkey(&1, %Monkey{}))
+      |> Enum.reduce(%{}, fn monkey, acc ->
+        Map.put(acc, monkey.id, monkey)
+      end)
+
+    divider =
+      monkeys
+      |> Map.values()
+      |> Enum.map(fn monkey -> monkey.divider end)
+      |> Enum.product()
+
+    1..10000
+    |> Enum.reduce(monkeys, fn _round, acc -> play_round(acc, 0, divider) end)
+    |> Map.to_list()
+    |> Enum.map(fn {_k, v} -> v.inspected end)
+    |> Enum.sort(fn a, b -> a > b end)
+    |> Enum.take(2)
+    |> Enum.product()
+  end
+
+  defp parse_monkey([], monkey), do: monkey
+
+  defp parse_monkey(["Monkey " <> rest | tail], monkey) do
+    id =
+      rest
+      |> String.replace(":", "")
+      |> String.to_integer()
+
+    parse_monkey(tail, %{monkey | id: id})
+  end
+
+  defp parse_monkey(["  Starting items: " <> rest | tail], monkey) do
+    items =
+      rest
+      |> String.split(", ")
+      |> Enum.map(fn item ->
+        String.to_integer(item)
+      end)
+
+    parse_monkey(tail, %{monkey | items: items})
+  end
+
+  defp parse_monkey(["  Operation: " <> rest | tail], monkey) do
+    parts = String.split(rest, " ")
+
+    f =
+      case Enum.at(parts, 3) do
+        "*" -> &Kernel.*/2
+        "+" -> &Kernel.+/2
+      end
+
+    a = Integer.parse(Enum.at(parts, 2))
+    b = Integer.parse(Enum.at(parts, 4))
+
+    op =
+      cond do
+        a == :error and b == :error -> &f.(&1, &1)
+        a == :error -> &f.(&1, elem(b, 0))
+        b == :error -> &f.(elem(a, 0), &1)
+      end
+
+    parse_monkey(tail, %{monkey | op: op})
+  end
+
+  defp parse_monkey(["  Test: divisible by " <> rest | tail], monkey) do
+    test_value = String.to_integer(rest)
+    parse_monkey(tail, %{monkey | divider: test_value})
+  end
+
+  defp parse_monkey(["    If true: throw to monkey " <> rest | tail], monkey) do
+    parse_monkey(tail, %{monkey | true: String.to_integer(rest)})
+  end
+
+  defp parse_monkey(["    If false: throw to monkey " <> rest | tail], monkey) do
+    parse_monkey(tail, %{monkey | false: String.to_integer(rest)})
+  end
+
+  defp play_round(monkeys, i, divider) do
+    case Map.get(monkeys, i) do
+      nil ->
+        monkeys
+
+      monkey ->
+        # IO.puts("Monkey #{monkey.id}")
+        monkeys = throw_items(monkey.items, monkey, monkeys, divider)
+        monkey = %{monkey | items: [], inspected: monkey.inspected + length(monkey.items)}
+        monkeys = Map.put(monkeys, i, monkey)
+        play_round(monkeys, i + 1, divider)
+    end
+  end
+
+  defp throw_items([], _, monkeys, _), do: monkeys
+
+  defp throw_items([worry | items], monkey, monkeys, divider) do
+    # IO.puts("Item worry #{worry}")
+    worry = monkey.op.(worry)
+    # IO.puts("Item worry after update #{worry}")
+    worry =
+      case divider do
+        3 -> div(worry, 3)
+        _ -> rem(worry, divider)
+      end
+
+    # IO.puts("Worry decrease #{worry}")
+    target =
+      case rem(worry, monkey.divider) == 0 do
+        true -> monkey.true
+        false -> monkey.false
+      end
+
+    target_monkey = Map.get(monkeys, target)
+    target_monkey = %{target_monkey | items: target_monkey.items ++ [worry]}
+    monkeys = Map.put(monkeys, target, target_monkey)
+    throw_items(items, monkey, monkeys, divider)
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```
