@@ -62,61 +62,16 @@ def solve(lines):
 
                     monkeys[k] = [val]
 
-        return monkeys    
+        return monkeys
 
-    def humn(donemonkeys, changemonkeys, n):
-        donemonkeys['humn'] = [n]
-        changemonkeys['root'][1] = '='
+    monkeys = prepmonkeys()
 
-        while not (isinstance(changemonkeys['root'][0], int) and isinstance(changemonkeys['root'][2], int)):
-            for k in changemonkeys.keys():
-                v = changemonkeys[k]
-
-                if len(v) == 1:
-                    continue
-
-                if not isinstance(v[0], int):
-                    if v[0] in donemonkeys or len(changemonkeys[v[0]]) == 1:
-                        v[0] = donemonkeys[v[0]][0] if v[0] in donemonkeys else changemonkeys[v[0]][0]
-                if not isinstance(v[2], int):
-                    if v[2] in donemonkeys or len(changemonkeys[v[2]]) == 1:
-                        v[2] = donemonkeys[v[2]][0] if v[2] in donemonkeys else changemonkeys[v[2]][0]
-
-                op = v[1]
-
-                if isinstance(v[0], int) and isinstance(v[2], int) and k != 'root':
-                    a = v[0]
-                    b = v[2]
-                    val = 0
-
-                    if op == '+':
-                        val = a+b
-                    elif op == '-':
-                        val = a-b
-                    elif op == '/':
-                        val = a//b
-                    elif op == '*':
-                        val = a*b
-                    else:
-                        val = a==b
-
-                    changemonkeys[k] = [val]
-
-        return changemonkeys['root'][0] == changemonkeys['root'][2]
-
-    n = 280000
-    basemonkeys = prepmonkeys()
-    
-    donemonkeys = {k: [el for el in v] for k, v in basemonkeys.items() if len(v) == 1}
-    changemonkeys = {k: [el for el in v] for k, v in basemonkeys.items() if len(v) == 3}
-
-    res = [v for v in changemonkeys['root'] if isinstance(v, int)][0]
-    symbol = [v for v in changemonkeys['root'][0:3:2] if isinstance(v, str)][0]
+    res = [v for v in monkeys['root'] if isinstance(v, int)][0]
+    symbol = [v for v in monkeys['root'][0:3:2] if isinstance(v, str)][0]
 
     while symbol != 'humn':
-        monkey = changemonkeys[symbol]
+        monkey = monkeys[symbol]
         val = [v for v in monkey if isinstance(v, int)][0]
-        print(symbol, monkey, val, res)
         symbol = [v for v in monkey[0:3:2] if isinstance(v, str) and v != '+'][0]
         op = monkey[1]
 
@@ -152,5 +107,3 @@ def main():
 
 if __name__ == '__main__':
     print(main())
-
-# 8401064794714
