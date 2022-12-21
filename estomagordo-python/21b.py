@@ -110,6 +110,42 @@ def solve(lines):
     donemonkeys = {k: [el for el in v] for k, v in basemonkeys.items() if len(v) == 1}
     changemonkeys = {k: [el for el in v] for k, v in basemonkeys.items() if len(v) == 3}
 
+    res = [v for v in changemonkeys['root'] if isinstance(v, int)][0]
+    symbol = [v for v in changemonkeys['root'][0:3:2] if isinstance(v, str)][0]
+
+    while symbol != 'humn':
+        monkey = changemonkeys[symbol]
+        val = [v for v in monkey if isinstance(v, int)][0]
+        print(symbol, monkey)
+        symbol = [v for v in monkey[0:3:2] if isinstance(v, str) and v != '+'][0]
+        op = monkey[1]
+
+        if op == '+':
+            res -= val
+        elif op == '-':
+            res += val
+        elif op == '/':
+            res *= val
+        else:
+            res //= val
+
+    return res
+
+    # def eqfor(symb):
+    #     return '(' + ''.join(str(val) for val in changemonkeys[symb]) + ')'
+
+    # def extractsymb(eq):
+    #     return ''.join(c for c in eq if c.isalpha())
+    
+    # equation = eqfor('root')
+    # lastsymb = extractsymb(equation)
+
+    # while lastsymb != 'humn':
+    #     equation = equation.replace(lastsymb, eqfor(lastsymb))
+    #     lastsymb = extractsymb(equation)
+    
+    # return equation
+    
     if 'humn' in changemonkeys:
         del changemonkeys['humn']
 
@@ -139,3 +175,5 @@ def main():
 
 if __name__ == '__main__':
     print(main())
+
+# 8401064794714
