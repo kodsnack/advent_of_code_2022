@@ -82,11 +82,9 @@ def solve(lines):
 
     @cache
     def nextfrom(y, x, direction):
-        dy = directions[direction%4][0]
-        dx = directions[direction%4][1]
+        dy, dx = directions[direction%4]
         cube = cubeface(y, x)
         miny, maxy, minx, maxx = cubelims[cube]
-        origdir = direction
 
         ny = y + dy
         nx = x + dx
@@ -116,7 +114,7 @@ def solve(lines):
                 ny = y - 1
                 nx = x
                 direction = 3
-        if ny > maxy:
+        elif ny > maxy:
             if cube == 1:
                 ny = y + 1
                 nx = x
@@ -141,7 +139,7 @@ def solve(lines):
                 ny = 0
                 nx = x + 100
                 direction = 1
-        if nx < minx:
+        elif nx < minx:
             if cube == 1:
                 ny = 149 - y
                 nx = 0
@@ -166,7 +164,7 @@ def solve(lines):
                 ny = 0
                 nx = y - 100
                 direction = 1
-        if nx > maxx:
+        elif nx > maxx:
             if cube == 1:
                 ny = y
                 nx = x + 1
@@ -192,10 +190,8 @@ def solve(lines):
                 nx = y - 100
                 direction = 3
     
-        if grid[ny][nx] == '#':
-            return (ny, nx, origdir)
-        # print(y, x, ny, nx, origdir, cubeface(y, x))
         return (ny, nx, direction)
+        # print(y, x, ny, nx, origdir, cubeface(y, x))
 
     for xx in range(width):
         if grid[0][xx] == '.':
@@ -207,13 +203,14 @@ def solve(lines):
         taken = 0
 
         while taken < taking:
-            ny, nx, facing = nextfrom(y, x, facing)
+            ny, nx, nfacing = nextfrom(y, x, facing)
 
             if grid[ny][nx] == '#':
                 break
 
             y = ny
             x = nx
+            facing = nfacing
 
             taken += 1
 
@@ -248,3 +245,4 @@ if __name__ == '__main__':
 
 # 149643 too high
 # 154139
+# 49474 too high
