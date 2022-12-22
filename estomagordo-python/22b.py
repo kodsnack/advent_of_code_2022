@@ -31,21 +31,43 @@ def solve(lines):
     facing = 0
     command = 0
 
-    for y in range(height):
-        diff = width - len(grid[y])
-        grid[y] += ' ' * diff
+    for yy in range(height):
+        diff = width - len(grid[yy])
+        grid[yy] += ' ' * diff
 
     def cubeface(y, x):
+        if y < 0:
+            print('above all')
+        if y > 199:
+            print('below all')
+        if x < 0:
+            print('left all?')
+        if x > 149:
+            print('right all!')
         if y < 50:
             if x < 100:
+                if x < 50:
+                    print('to the left of 1')
                 return 1
+            if x > 149:
+                print('to the right of 2')
             return 2
         if y < 100:
+            if x < 50:
+                print('to the left of 3')
+            if x > 99:
+                print('to the right of 3')
             return 3
         if y < 150:
             if x < 50:
                 return 4
+            if x > 99:
+                print('to the right of 5')
             return 5
+        if y > 199:
+            print('too far down')
+        if x > 49:
+            print('to the right of 6')
         return 6
 
     cubelims = [
@@ -167,12 +189,12 @@ def solve(lines):
                 direction = 2
             if cube == 6:
                 ny = 149
-                nx = x - 100
+                nx = y - 100
                 direction = 3
-
+    
         if grid[ny][nx] == '#':
-            return (y, x, origdir)
-
+            return (ny, nx, origdir)
+        # print(y, x, ny, nx, origdir, cubeface(y, x))
         return (ny, nx, direction)
 
     for xx in range(width):
@@ -187,7 +209,7 @@ def solve(lines):
         while taken < taking:
             ny, nx, facing = nextfrom(y, x, facing)
 
-            if ny == y and nx == x:
+            if grid[ny][nx] == '#':
                 break
 
             y = ny
@@ -195,9 +217,17 @@ def solve(lines):
 
             taken += 1
 
-        if command < len(turns):
-            facing += turns[command]
+        if taken == 0:
+            dy, dx = directions[facing%4]
+            ny = y + dy
+            nx = x + dx
 
+            if (grid[ny][nx]) == '.':
+                print(command, taking, facing)
+
+        if command < len(turns):
+            facing += turns[command]            
+        
         command += 1
 
     return 1000 * (y+1) + 4 * (x+1) + facing % 4
@@ -217,3 +247,4 @@ if __name__ == '__main__':
     print(main())
 
 # 149643 too high
+# 154139
