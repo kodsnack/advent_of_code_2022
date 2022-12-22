@@ -101,7 +101,7 @@ def solve(lines):
                 direction = 1
             if cube == 2:
                 ny = x - 50
-                nx = 100
+                nx = 99
                 direction = 2
             if cube == 3:
                 ny = y + 1
@@ -143,14 +143,14 @@ def solve(lines):
             if cube == 6:
                 ny = 0
                 nx = y - 100
-                direction = 3
+                direction = 1
         if nx > maxx:
             if cube == 1:
                 ny = y
                 nx = x + 1
                 direction = 0
             if cube == 2:
-                ny = 149 - y
+                ny = x
                 nx = 99
                 direction = 2
             if cube == 3:
