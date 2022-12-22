@@ -23,14 +23,6 @@ func main() {
 		}
 	}
 
-	walkedOn := make(map[xy]bool)
-
-	var pos xy
-	// left, up, right, down
-	DX := []int{0, -1, 0, 1}
-	DY := []int{-1, 0, 1, 0}
-	var dir = 2
-
 	// find start
 	var miny int = 999999
 	for p, ch := range world {
@@ -38,8 +30,56 @@ func main() {
 			miny = min(miny, p[1])
 		}
 	}
-	pos[1] = miny
+	start := xy{0, miny}
 
+	fmt.Println(solve(world, start, parts[1], wrap1))
+	fmt.Println(solve(world, start, parts[1], wrap2))
+
+}
+
+type wrapFn func(world map[xy]rune, pos xy, dir int) (xy, int)
+
+var (
+	DX = []int{0, 1, 0, -1}
+	DY = []int{1, 0, -1, 0}
+)
+
+func solve(world map[xy]rune, start xy, instrs string, fn wrapFn) int {
+	var dir = 0
+	pos := start
+
+	var pre string
+	for idx, ch := range instrs {
+		if ch == 'L' {
+			dir = (dir - 1) % 4
+			if dir < 0 {
+				dir += 4
+			}
+			continue
+		} else if ch == 'R' {
+			dir = (dir + 1) % 4
+			if dir < 0 {
+				dir += 4
+			}
+			continue
+		}
+
+		pre += string(ch)
+
+		if len(instrs) == idx+1 || (instrs[idx+1] == 'L' || instrs[idx+1] == 'R') {
+			num, _ := strconv.Atoi(pre)
+			pre = ""
+			for i := 0; i < num; i++ {
+				// pos, dir = wrap1(world, pos, dir)
+				pos, dir = fn(world, pos, dir)
+			}
+		}
+	}
+
+	return (pos[0]+1)*1000 + (pos[1]+1)*4 + dir
+}
+
+func wrap2(world map[xy]rune, pos xy, dir int) (xy, int) {
 	wrap := func(x, y, dx, dy int) (int, int, int, int) {
 
 		// down
@@ -53,7 +93,6 @@ func main() {
 			if x == 199 { // F to B
 				return 0, y + 100, 1, 0
 			}
-
 		}
 
 		// up
@@ -63,7 +102,6 @@ func main() {
 					return y + 100, 0, 0, 1
 				} else { // B to F
 					return 199, y - 100, -1, 0
-
 				}
 			}
 			if x == 100 { // E to C
@@ -71,7 +109,7 @@ func main() {
 			}
 		}
 
-		//right
+		// right
 		if dy == 1 {
 			if y == 149 { // B to D
 				return 149 - x, 99, 0, -1
@@ -111,100 +149,118 @@ func main() {
 		return -1, -1, -1, -1
 	}
 
-	var pre string
-	for idx, ch := range parts[1] {
-		if ch == 'L' {
-			dir = (dir - 1) % 4
-			if dir < 0 {
-				dir += 4
-			}
-			continue
-		} else if ch == 'R' {
-			dir = (dir + 1) % 4
-			if dir < 0 {
-				dir += 4
-			}
-			continue
+	next := pos
+	next[0] += DX[dir]
+	next[1] += DY[dir]
+
+	if _, ok := world[next]; !ok {
+		nx, ny, ndx, ndy := wrap(pos[0], pos[1], DX[dir], DY[dir])
+
+		next = xy{nx, ny}
+		if _, ok := world[next]; !ok {
+			fmt.Println(next)
+			panic("outside of map")
 		}
 
-		pre += string(ch)
+		// check if we can reverse and end up on the same spot
+		{
+			rx, ry, rdx, rdy := wrap(nx, ny, -ndx, -ndy)
+			if rx != pos[0] || ry != pos[1] || -rdx != DX[dir] || -rdy != DY[dir] {
+				fmt.Println(" in:", pos[0], pos[1], DX[dir], DY[dir])
+				fmt.Println("out:", nx, ny, ndx, ndy)
+				fmt.Println("inr:", nx, ny, -ndx, -ndy)
+				fmt.Println("rev:", rx, ry, rdx, rdy)
+				panic("not reversible")
+			}
+		}
 
-		if len(parts[1]) == idx+1 || (parts[1][idx+1] == 'L' || parts[1][idx+1] == 'R') {
-			num, _ := strconv.Atoi(pre)
-			pre = ""
-			for i := 0; i < num; i++ {
-				next := pos
-				next[0] += DX[dir]
-				next[1] += DY[dir]
+		if world[next] == '.' {
 
-				if _, ok := world[next]; !ok {
-					nx, ny, ndx, ndy := wrap(pos[0], pos[1], DX[dir], DY[dir])
-
-					next = xy{nx, ny}
-					if _, ok := world[next]; !ok {
-						fmt.Println(next)
-						panic("outside of map")
-					}
-
-					// check if we can reverse and end up on the same spot
-					{
-						rx, ry, rdx, rdy := wrap(nx, ny, -ndx, -ndy)
-						if rx != pos[0] || ry != pos[1] || -rdx != DX[dir] || -rdy != DY[dir] {
-							fmt.Println(" in:", pos[0], pos[1], DX[dir], DY[dir])
-							fmt.Println("out:", nx, ny, ndx, ndy)
-							fmt.Println("inr:", nx, ny, -ndx, -ndy)
-							fmt.Println("rev:", rx, ry, rdx, rdy)
-							panic("not reversible")
-						}
-					}
-
-					if world[next] == '.' {
-						pos = next
-						// set dir
-						for ndir, dx := range DX {
-							if dx == ndx && DY[ndir] == ndy {
-								dir = ndir
-								break
-							}
-						}
-					}
-
-				} else {
-
-					// if can walk
-					if world[next] == '.' {
-						pos = next
-					}
-					walkedOn[pos] = true
+			for ndir, dx := range DX {
+				if dx == ndx && DY[ndir] == ndy {
+					dir = ndir
+					break
 				}
 			}
+			return next, dir
+		}
+
+	} else {
+		// if can walk
+		if world[next] == '.' {
+			return next, dir
 		}
 	}
 
-	fmt.Println(pos)
+	return pos, dir
+}
 
-	// left, up, right, down
-	var face int // right, down, left, up
-	switch dir {
-	case 2: // right
-		face = 0
-	case 3:
-		face = 1
-	case 0: // left
-		face = 2 // left
-	case 1:
-		face = 3
+func wrap1(world map[xy]rune, pos xy, dir int) (xy, int) {
+	next := pos
+	next[0] += DX[dir]
+	next[1] += DY[dir]
+
+	// wrap y
+	if _, ok := world[next]; !ok && dir == 2 {
+		var maxY int
+		for pp := range world {
+			if pp[0] == next[0] {
+				maxY = max(maxY, pp[1])
+			}
+		}
+		next[1] = maxY
 	}
 
-	// 38598
-	// p2 147024 too high
-	fmt.Println((pos[0]+1)*1000 + (pos[1]+1)*4 + face)
+	if _, ok := world[next]; !ok && dir == 0 {
+		var minY int = 999999999999
+		for pp := range world {
+			if pp[0] == next[0] {
+				minY = min(minY, pp[1])
+			}
+		}
+		next[1] = minY
+	}
+
+	// wrap x up to bottom
+	if _, ok := world[next]; !ok && dir == 3 {
+		var maxX int
+		for pp := range world {
+			if pp[1] == next[1] {
+				maxX = max(maxX, pp[0])
+			}
+		}
+		next[0] = maxX
+	}
+
+	if _, ok := world[next]; !ok && dir == 1 {
+		var minX int = 999999999999
+		for pp := range world {
+			if pp[1] == next[1] {
+				minX = min(minX, pp[0])
+			}
+		}
+		next[0] = minX
+	}
+
+	// if can walk
+	if world[next] == '.' {
+		return next, dir
+	}
+
+	return pos, dir
 }
 
 type xy [2]int
 
 func min(a, b int) int {
 	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
 		return a
 	}
 	return b
