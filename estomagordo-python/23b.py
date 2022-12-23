@@ -20,31 +20,10 @@ def solve(lines):
         [[0, 1], [-1, 1], [1, 1]]
     ]
 
-    def printelves(elves):
-        miny = min(e[0] for e in elves)
-        maxy = max(e[0] for e in elves)
-        minx = min(e[1] for e in elves)
-        maxx = max(e[1] for e in elves)
-
-        print()
-
-        for y in range(miny, maxy+1):
-            row = ''
-            for x in range(minx, maxx+1):
-                row += '#' if (y, x) in elves else '.'
-            print(row)
-
-        print()
-
     round = 1
 
     while True:
-        # printelves(elves)
         roundmoves = defaultdict(list)
-
-        if round % 1000 == 0:
-            print(round)
-
         for y, x in elves:
             neighs = {(ny, nx) for ny, nx in eight_neighs(y, x) if (ny, nx) in elves}
             
@@ -78,23 +57,6 @@ def solve(lines):
             return round
 
         round += 1
-
-    printelves(elves)
-    
-    miny = min(e[0] for e in elves)
-    maxy = max(e[0] for e in elves)
-    minx = min(e[1] for e in elves)
-    maxx = max(e[1] for e in elves)
-
-    count = 0
-
-    for y in range(miny, maxy+1):
-        for x in range(minx, maxx+1):
-            if (y, x) not in elves:
-                count += 1
-
-
-    return count
 
 
 def main():

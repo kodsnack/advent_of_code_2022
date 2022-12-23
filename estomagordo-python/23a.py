@@ -21,25 +21,8 @@ def solve(lines):
         [[0, 1], [-1, 1], [1, 1]]
     ]
 
-    def printelves(elves):
-        miny = min(e[0] for e in elves)
-        maxy = max(e[0] for e in elves)
-        minx = min(e[1] for e in elves)
-        maxx = max(e[1] for e in elves)
-
-        print()
-
-        for y in range(miny, maxy+1):
-            row = ''
-            for x in range(minx, maxx+1):
-                row += '#' if (y, x) in elves else '.'
-            print(row)
-
-        print()
-
     
     for round in range(rounds):
-        printelves(elves)
         roundmoves = defaultdict(list)
 
         for y, x in elves:
@@ -68,8 +51,6 @@ def solve(lines):
             
             elves.add((my, mx))
             elves.remove((oy, ox))
-
-    printelves(elves)
     
     miny = min(e[0] for e in elves)
     maxy = max(e[0] for e in elves)
