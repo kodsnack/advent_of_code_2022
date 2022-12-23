@@ -1,0 +1,107 @@
+# AoC 2022 - day 08
+
+```elixir
+Mix.install([:kino])
+```
+
+## Section
+
+```elixir
+input = Kino.Input.textarea("input")
+```
+
+```elixir
+defmodule Day01 do
+  def solve1(input) do
+    input
+    |> parse_forest()
+    |> Enum.reduce(%{}, &get_cols_and_rows/2)
+    |> Map.to_list()
+    |> Enum.flat_map(fn {_, e} -> [e, Enum.reverse(e)] end)
+    |> Enum.flat_map(fn e ->
+      Enum.reduce(e, {[], -1}, fn
+        {_, height} = curr, {[], _} ->
+          {[curr], height}
+
+        {_, height} = curr, {acc, max} ->
+          if height > max do
+            {[curr | acc], height}
+          else
+            {acc, max}
+          end
+      end)
+      |> elem(0)
+    end)
+    |> Enum.uniq()
+    |> Enum.count()
+  end
+
+  def solve2(input) do
+    forest =
+      input
+      |> parse_forest()
+      |> Enum.into(%{})
+
+    {x_max, y_max} = forest |> Map.keys() |> Enum.max()
+
+    for x <- 0..x_max, y <- 0..y_max do
+      scenic_score({x, y}, forest)
+    end
+    |> Enum.max()
+  end
+
+  defp parse_forest(input) do
+    input
+    |> String.split("\n", trim: true)
+    |> Enum.with_index()
+    |> Enum.flat_map(fn {v, y} ->
+      v
+      |> String.split("", trim: true)
+      |> Enum.with_index()
+      |> Enum.map(fn {i, x} -> {{x, y}, String.to_integer(i)} end)
+    end)
+  end
+
+  defp get_cols_and_rows({{x, y} = cord, height}, acc) do
+    acc
+    |> Map.update({:col, x}, [{cord, height}], fn ex -> [{cord, height} | ex] end)
+    |> Map.update({:row, y}, [{cord, height}], fn ex -> [{cord, height} | ex] end)
+  end
+
+  defp scenic_score(cord, forest) do
+    [{1, 0}, {0, 1}, {-1, 0}, {0, -1}]
+    |> Enum.map(fn direction ->
+      cast_ray(direction, forest, {cord, Map.get(forest, cord)})
+    end)
+    |> Enum.product()
+  end
+
+  defp cast_ray(direction, forest, {origin, height}) do
+    get_trees(add(origin, direction), direction, forest, [])
+    |> Enum.reduce_while([], fn tree, acc ->
+      case tree < height do
+        true -> {:cont, [tree | acc]}
+        false -> {:halt, [tree | acc]}
+      end
+    end)
+    |> Enum.count()
+  end
+
+  defp add({x, y}, {a, b}), do: {x + a, y + b}
+
+  defp get_trees(cord, direction, forest, acc) do
+    case Map.get(forest, cord) do
+      nil -> Enum.reverse(acc)
+      a -> get_trees(add(cord, direction), direction, forest, [a | acc])
+    end
+  end
+end
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve1()
+```
+
+```elixir
+Kino.Input.read(input) |> Day01.solve2()
+```

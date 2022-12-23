@@ -1,4 +1,4 @@
-from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap
+from helpers import distance, distance_sq, ints, manhattan, neighs, neighs_bounded, columns, digits, chunks, chunks_with_overlap, positives, rays, rays_from_inside, custsort, adjacent
 
 
 def test_distance():
@@ -247,3 +247,105 @@ def test_chunks_with_overlap():
 
     assert([[1, 2], [2, 7], [7, 10], [10, 12], [12, 2]] == twochunks)
     assert([[1, 2, 7], [2, 7, 10], [7, 10, 12], [10, 12, 2]] == threechunks)
+
+
+def test_nums():
+    s = 'What they-43 were 8 saying was <albeit 7> (9) mi85ninte and -2'
+
+    nums = positives(s)
+    expected = [43, 8, 7, 9, 85, 2]
+
+    assert(expected == nums)
+
+
+def test_rays():
+    grid = [
+        [3, 0, 3, 7, 3],
+        [2, 5, 5, 1, 2],
+        [6, 5, 3, 3, 2],
+        [3, 3, 5, 4, 9],
+        [3, 5, 3, 9, 0]
+    ]
+
+    y = 1
+    x = 2
+
+    n = [3]
+    s = [3, 5, 3]
+    w = [2, 5]
+    e = [1, 2]
+
+    raysfrom = rays(grid, y, x)
+
+    assert(n in raysfrom)
+    assert(s in raysfrom)
+    assert(w in raysfrom)
+    assert(e in raysfrom)
+
+
+def test_rays_from_inside():
+    grid = [
+        [3, 0, 3, 7, 3],
+        [2, 5, 5, 1, 2],
+        [6, 5, 3, 3, 2],
+        [3, 3, 5, 4, 9],
+        [3, 5, 3, 9, 0]
+    ]
+
+    y = 1
+    x = 2
+
+    n = [3]
+    s = [3, 5, 3]
+    w = [5, 2]
+    e = [1, 2]
+
+    raysfrom = rays_from_inside(grid, y, x)
+
+    assert(n in raysfrom)
+    assert(s in raysfrom)
+    assert(w in raysfrom)
+    assert(e in raysfrom)
+
+
+def test_custsort():
+    compreg = lambda a,b: -1 if a < b else 1
+    comprev = lambda a,b: -1 if a >= b else 1
+
+    l = [5, 2, 1, 0, 9]
+
+    resreg = custsort(l, compreg)
+    resrev = custsort(l, comprev)
+
+    assert([0, 1, 2, 5, 9] == resreg)
+    assert([9, 5, 2, 1, 0] == resrev)
+
+
+def test_adjacent():
+    one_d_a = [4]
+    one_d_b = [5]
+    one_d_c = [10]
+
+    two_d_a = [4, 1]
+    two_d_b = [3, 1]
+    two_d_c = [4, 2]
+    two_d_d = [3, 0]
+
+    three_d_a = [1, 1, 1]
+    three_d_b = [1, 0, 1]
+    three_d_c = [1, 1, 3]
+    three_d_d = [0, 1, 0]
+
+    assert(not adjacent(one_d_a, one_d_a))
+    assert(adjacent(one_d_a, one_d_b))
+    assert(not adjacent(one_d_a, one_d_c))
+
+    assert(not adjacent(two_d_a, two_d_a))
+    assert(adjacent(two_d_a, two_d_b))
+    assert(adjacent(two_d_a, two_d_c))
+    assert(not adjacent(two_d_a, two_d_d))
+
+    assert(not adjacent(three_d_a, three_d_a))
+    assert(adjacent(three_d_a, three_d_b))
+    assert(not adjacent(three_d_a, three_d_c))
+    assert(not adjacent(three_d_a, three_d_d))
