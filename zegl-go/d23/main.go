@@ -26,37 +26,31 @@ func main() {
 		nextworld := make(map[xy]xy) // prev, next
 
 		for p := range world {
-			north := []xy{{p[0] - 1, p[1] - 1}, {p[0] - 1, p[1]}, {p[0] - 1, p[1] + 1}}
-			south := []xy{{p[0] + 1, p[1] - 1}, {p[0] + 1, p[1]}, {p[0] + 1, p[1] + 1}}
-			west := []xy{{p[0] - 1, p[1] - 1}, {p[0], p[1] - 1}, {p[0] + 1, p[1] - 1}}
-			east := []xy{{p[0] - 1, p[1] + 1}, {p[0], p[1] + 1}, {p[0] + 1, p[1] + 1}}
+			var N, S, W, E int
 
-			var cnort, csouth, cwest, ceast int
-			for _, n := range north {
-				if world[n] {
-					cnort++
-				}
-			}
-			for _, n := range south {
-				if world[n] {
-					csouth++
-				}
-			}
-			for _, n := range west {
-				if world[n] {
-					cwest++
-				}
-			}
-			for _, n := range east {
-				if world[n] {
-					ceast++
+			for dx := -1; dx <= 1; dx++ {
+				for dy := -1; dy <= 1; dy++ {
+					if dx == 0 && dy == 0 {
+						continue
+					}
+					if world[xy{p[0] + dx, p[1] + dy}] {
+						if dx == -1 {
+							N++
+						}
+						if dx == 1 {
+							S++
+						}
+						if dy == -1 {
+							W++
+						}
+						if dy == 1 {
+							E++
+						}
+					}
 				}
 			}
 
-			count := cnort + csouth + cwest + ceast
-
-			if count == 0 {
-				// nextworld[p] = p
+			if N+S+W+E == 0 {
 				continue
 			}
 
@@ -64,10 +58,10 @@ func main() {
 				count int
 				pos   xy
 			}{
-				{cnort, xy{p[0] - 1, p[1]}},
-				{csouth, xy{p[0] + 1, p[1]}},
-				{cwest, xy{p[0], p[1] - 1}},
-				{ceast, xy{p[0], p[1] + 1}},
+				{N, xy{p[0] - 1, p[1]}},
+				{S, xy{p[0] + 1, p[1]}},
+				{W, xy{p[0], p[1] - 1}},
+				{E, xy{p[0], p[1] + 1}},
 			}
 
 			for ii := 0; ii < 4; ii++ {
@@ -85,20 +79,16 @@ func main() {
 			targets[next]++
 		}
 
-		var moves int
 		w2 := make(map[xy]bool)
 		for p, next := range nextworld {
 			if targets[next] == 1 {
 				w2[next] = true
 				world[p] = false
-				delete(world, p)
-				moves++
 			}
 		}
 
-		if moves == 0 {
+		if len(w2) == 0 {
 			fmt.Println("part2", i+1)
-			// render(world)
 			return
 		}
 
@@ -128,8 +118,6 @@ func main() {
 				}
 			}
 			fmt.Println("part1", count)
-
-			//render(world)
 		}
 	}
 }
