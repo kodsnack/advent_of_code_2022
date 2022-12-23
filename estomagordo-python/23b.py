@@ -24,23 +24,17 @@ def solve(lines):
 
     while True:
         roundmoves = defaultdict(list)
-        for y, x in elves:
-            neighs = {(ny, nx) for ny, nx in eight_neighs(y, x) if (ny, nx) in elves}
-            
-            if len(neighs) == 0:
-                continue
 
-            found = False
+        for y, x in elves:            
+            if not any((ny, nx) in elves for ny, nx in eight_neighs(y, x)):
+                continue
             
             for dmove in range(4):
-                if found:
-                    break
-
-                move = turnorder[(round+dmove)%4]
+                move = turnorder[(round-1+dmove)%4]
 
                 if not any((y+my, x+mx) in elves for my, mx in move):
-                    found = True
                     roundmoves[(y+move[0][0], x+move[0][1])].append((y, x))
+                    break
 
         moved = False
         
