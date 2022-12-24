@@ -41,7 +41,7 @@ def solve(lines):
                 unmovable.add((0, y, x))
 
 
-    blizzlim = 1000
+    blizzlim = 500
 
     for t in range(1, blizzlim):
         newblizz = []
@@ -92,7 +92,6 @@ def solve(lines):
             seen.add((t+1, ny, nx))
 
             heappush(frontier, [t+1, ny, nx])
-
 
 
 def main():
