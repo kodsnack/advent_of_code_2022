@@ -104,3 +104,6 @@
 [submodule "emlun-rust"]
 	path = emlun-rust
 	url = https://github.com/emlun/adventofcode-2022.git
+[submodule "AxlLind-Rust"]
+	path = AxlLind-Rust
+	url = https://github.com/AxlLind/AdventOfCode2022.git

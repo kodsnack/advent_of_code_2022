@@ -9,7 +9,6 @@ def solve(lines):
             [rock.add((x,y)) for x in range(xs[0], xs[1]+1) for y in range(ys[0], ys[1]+1)]
             bottom = max(bottom, int(sy), int(ey))
     [rock.add((x,bottom+2)) for x in range(500-bottom-10, 500+bottom+10)]
-    #return bottom
     while True:
         x, y = 500, 0
         while True:

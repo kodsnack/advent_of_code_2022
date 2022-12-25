@@ -1,2 +1,4 @@
 **/*.pyc
 experiments.py
+*.json
+ranker.py
