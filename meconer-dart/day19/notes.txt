@@ -21,3 +21,5 @@ Tog bort villkoret för clayrobottillverkning.
 
 Om jag kunde göra en obsidianrobot så testade jag inte de andra. Tog bort det villkoret.
 603635203 . Nu blev det väldigt många igen.
+
+GJorde lite mer optimeringar och ändrade villkor men kommer inte riktigt ihåg nu när jag kom till noteringarna igen.
