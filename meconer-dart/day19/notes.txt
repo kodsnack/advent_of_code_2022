@@ -1,0 +1,25 @@
+Testat att göra ett set med visited nodes. Det blir för många. Kör man visited.length så minskar den efter ett tag!
+Om jag kan göra en geoderobot så gör jag det och struntar i allt annat. Glömde dock att strunta i wait. 
+Gör bara clayrobot om jag inte har tillräckligt med clay för att göra en obsidianrobot
+599043521 för P1 första blueprint
+
+Om jag inte glömmer att strunta i wait
+599043521. Alltså ingen skillnad... ?
+
+Ändrat villkoret för clayrobot. Gör en clayrobot bara om clay + clayrobots är mindre än vad som behövs för att göra
+en obsidianrobot varje minut
+311908548 för P1 första blueprint. Ger dock fel resultat för andra blueprinten
+
+En clayrobot om vi inte redan kan göra en obsidianrobot varje minut Ger
+607400993 på blueprint 1. Något sämre tidsmässigt men ger i alla fall rätt resultat.
+
+En orerobot bara om vi inte har tillräckligt dvs max av alla orekostnader
+26942205 blueprint 1. Klar förbättring! Dessutom rätt på bp 2 efter 25571863 Denna ger dock fel svar på bp1 i del2 :(
+
+Tog bort villkoret för clayrobottillverkning. 
+26942374 på bp1. Marginell skillnad men fortfarande fel!
+
+Om jag kunde göra en obsidianrobot så testade jag inte de andra. Tog bort det villkoret.
+603635203 . Nu blev det väldigt många igen.
+
+GJorde lite mer optimeringar och ändrade villkor men kommer inte riktigt ihåg nu när jag kom till noteringarna igen.
