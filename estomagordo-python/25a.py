@@ -28,8 +28,6 @@ def solve(lines):
         n = desnafu(line.rstrip())
         s += n
 
-        # print(line.rstrip(), n, s)
-
     startbase = 1
     while s >= 3 * startbase:
         startbase *= 5
@@ -37,8 +35,6 @@ def solve(lines):
     seen = {(s, startbase): (-1, -1)}
     frontier = deque([(s, startbase)])
     winner = (-1, -1)
-
-    print(s)
 
     while frontier:
         n, base = frontier.popleft()
@@ -72,9 +68,6 @@ def solve(lines):
 
             seen[(n-d, base//5)] = (n, base)
 
-            if len(seen) % 1000000 == 0:
-                print(len(seen), len(frontier))
-
             frontier.append((n-d, base//5))
     
     t = ''
@@ -83,7 +76,7 @@ def solve(lines):
 
     while base != -1:
         diff = (n - prev) // base
-        
+
         if diff >= 0:
             t += str(diff)
         elif diff == -2:

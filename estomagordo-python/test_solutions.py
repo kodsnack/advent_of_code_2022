@@ -46,6 +46,7 @@ day23a = __import__('23a')
 day23b = __import__('23b')
 day24a = __import__('24a')
 day24b = __import__('24b')
+day25a = __import__('25a')
 
 
 def test_1a():
@@ -286,3 +287,8 @@ def test_24a():
 def test_24b():
     result = day24b.main()
     assert(905 == result)
+
+
+def test_25a():
+    result = day25a.main()
+    assert('20=212=1-12=200=00-1' == result)
