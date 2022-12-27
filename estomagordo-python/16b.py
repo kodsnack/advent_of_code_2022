@@ -62,9 +62,6 @@ def solve(lines):
             if remaining == 0:
                 continue
 
-            if valve in usable and valve not in used:
-                heappush(frontier, [remaining-1, score + valves[valve][0] * (remaining-1), valve, used + [valve]])
-
             for u in usable:
                 if u in used:
                     continue
@@ -73,14 +70,15 @@ def solve(lines):
                     continue
 
                 taking = distances[valve][u]
-                arrival = remaining-taking
+                arrival = remaining-taking-1
 
                 if arrival > 0:
                     t = tuple(used + [u])
+                    taking_score = valves[u][0] * arrival
 
                     if t not in paths:
                         paths.add(t)
-                        heappush(frontier, [arrival, score, u, list(used)])
+                        heappush(frontier, [arrival, score+taking_score, u, used + [u]])
 
         return highest, best
 
