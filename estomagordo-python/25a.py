@@ -80,12 +80,10 @@ def solve(lines):
     t = ''
     n, base = winner
     prev = 0
-    corr = {1: '0', 5: '=', 25: '1', 125: '-', 625: '=', 3125: '2'}
 
     while base != -1:
         diff = (n - prev) // base
-        # print(n, base, diff, corr[base])
-
+        
         if diff >= 0:
             t += str(diff)
         elif diff == -2:
