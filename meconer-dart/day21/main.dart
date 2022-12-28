@@ -110,7 +110,7 @@ vilket blir ungefär 3087390115701.9897
 
 Vi börjar med testinput på 3087390115700 och räknar uppåt
 
-Hittat resultatet på 3087390115721!
+Hittat resultatet på 3087390115721! 
 
 */
 int calcResultP2(List<String> inputLines) {
