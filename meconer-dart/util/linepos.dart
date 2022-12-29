@@ -70,4 +70,36 @@ class LinePos {
     int yDist = (pos.row - row).abs();
     return xDist + yDist;
   }
+
+  LinePos moveNW() {
+    return moveUp().moveLeft();
+  }
+
+  LinePos moveNE() {
+    return moveUp().moveRight();
+  }
+
+  LinePos moveSW() {
+    return moveDown().moveLeft();
+  }
+
+  LinePos moveSE() {
+    return moveDown().moveRight();
+  }
+
+  LinePos moveN() {
+    return moveUp();
+  }
+
+  LinePos moveW() {
+    return moveLeft();
+  }
+
+  LinePos moveS() {
+    return moveDown();
+  }
+
+  LinePos moveE() {
+    return moveRight();
+  }
 }
