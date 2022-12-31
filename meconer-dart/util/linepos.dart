@@ -102,4 +102,8 @@ class LinePos {
   LinePos moveE() {
     return moveRight();
   }
+
+  List<LinePos> getNeighbours() {
+    return [moveUp(), moveLeft(), moveDown(), moveRight()];
+  }
 }
