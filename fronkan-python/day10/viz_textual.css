@@ -1,0 +1,20 @@
+/* Screen {
+    layout: grid;
+    grid-size: 40;
+} */
+
+Grid{
+    grid-size: 40;
+    height: 50%;
+}
+
+.box {
+    height: 100%;
+    width: 100%;
+    border: solid green;
+}
+
+.active {
+    background: green;
+    border: solid green;
+}
